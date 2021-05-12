@@ -1,0 +1,81 @@
+/*
+   Simple +/-/* expression language; 
+   parser evaluates constant expressions on the fly
+*/
+
+package cup.example;
+
+import java_cup.runtime.*;
+import cup.example.Lexer;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileInputStream;
+
+parser code {:
+  protected Lexer lexer;
+  /* Initiate array values to 0 */
+  Double MEM[] = new Double[100];
+  {
+    for (int i = 0; i<MEM.length; i++){
+      MEM[i] = 0.0;
+    }
+  }
+:};
+
+/* define how to connect to the scanner! */
+init with {:
+  ComplexSymbolFactory f = new ComplexSymbolFactory();
+  symbolFactory = f;
+  File file = new File("input.txt");
+  FileInputStream fis = null;
+  try {
+    fis = new FileInputStream(file);
+  } catch (IOException e) {
+    e.printStackTrace();
+  } 
+  lexer = new Lexer(f,fis);
+
+:};
+scan with {: return lexer.next_token(); :};
+
+/* Terminals (tokens returned by the scanner). */
+terminal           SEMI, PLUS, MINUS, TIMES, DIVISION, UMINUS, LPAREN, RPAREN, LOG, EXP, LN, SIN, COS, EQUAL, PLUSPLUS, MINUSMINUS;
+terminal Double    NUMBER;        // our scanner provides numbers as doubles
+terminal Integer   ARRAYMEM;
+
+/* Non terminals */
+non terminal  expr_list;
+non terminal Double expr, term, factor;      // used to store evaluated subexpressions
+start with expr_list;
+
+/* The grammar rules */			
+expr_list ::= 	expr_list expr:e SEMI          {: System.out.println(e); 			  :}
+            	| expr:e SEMI                  {: System.out.println(e); 			  :}
+            	;
+            
+expr      ::= 	expr:e PLUS   term:t           {: RESULT = e+t;        			      :}
+	            | expr:e MINUS term:t          {: RESULT = e-t;  				      :}        
+	 	 	 	| term:t					   {: RESULT = t;  				          :}
+	 	 	 	;
+
+term      ::=  	 term:t TIMES factor:f         {: RESULT = t*f;        			      :}
+	             | term:t DIVISION factor:f    {: RESULT = t/f;        			      :}                             			  
+	             | factor:f					   {: RESULT = f;  				   		  :}
+	             ;
+
+factor    ::=    LPAREN expr:e RPAREN          {: RESULT = e;                         :}
+				 | NUMBER: n				   {: RESULT = n;                         :}			 			          
+	             | ARRAYMEM:n                  {: RESULT = MEM[n];                    :}
+	             | PLUSPLUS ARRAYMEM:n         {: MEM[n] = ++MEM[n]; RESULT = MEM[n]; :}
+	             | ARRAYMEM:n PLUSPLUS         {: RESULT = MEM[n]; MEM[n] = MEM[n]+1; :}
+	             | ARRAYMEM:n MINUSMINUS       {: RESULT = MEM[n]; MEM[n] = MEM[n]-1; :}
+	             | MINUSMINUS ARRAYMEM:n       {: MEM[n] = --MEM[n]; RESULT = MEM[n]; :}
+	             | LOG factor:f                {: RESULT = Math.log10(f);             :}
+	             | LN factor:f                 {: RESULT = Math.log(f);               :}
+	             | EXP factor:f                {: RESULT = Math.exp(f);               :}
+	             | SIN factor:f                {: RESULT = Math.sin(f);               :}
+	             | COS factor:f                {: RESULT = Math.cos(f);               :}
+	             | ARRAYMEM:n EQUAL factor:f   {: MEM[n] = f;        RESULT = MEM[n]; :}
+	             | MINUS factor:f              {: RESULT = -f;                        :} 
+	             | PLUS factor:f               {: RESULT = +f;                        :}                                    
+	             ;
