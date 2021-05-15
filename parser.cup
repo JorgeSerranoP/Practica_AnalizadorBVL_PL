@@ -41,48 +41,57 @@ scan with {: return lexer.next_token(); :};
 /* Terminals (tokens returned by the scanner). */
 terminal           SEMI, PLUS, MINUS, TIMES, DIVISION, UMINUS, LPAREN, RPAREN,
 LOG, EXP, LN, SIN, COS, EQUAL, PLUSPLUS, MINUSMINUS, TRUE, FALSE, ASIGNATION,
-MORETHAN, LESSTHAN, ISEQUAL, AND, NOT, OR, ENTERO, REAL, FINMIENTRAS, BOOLEANO,
-VECTOR, CARACTER, MIENTRAS, SI, ENTRADA, ENTONCES, SINO, FINSI;
+MORETHAN, LESSTHAN, ISEQUAL, AND, NOT, OR, FINMIENTRAS,
+VECTOR, MIENTRAS, SI, ENTRADA, ENTONCES, SINO, FINSI;
 terminal Double    NUMBER;        // our scanner provides numbers as doubles
 terminal Integer   ARRAYMEM;
 terminal Character CHAR;
-terminal String IDENTIFIER;
+terminal String IDENTIFIER, ENTERO, REAL, BOOLEANO, CARACTER;
 
 /* Non terminals */
-non terminal  expr_list;
-non terminal Double expr, term, factor;      // used to store evaluated subexpressions
-start with expr_list;
+non terminal  sentencia, sent_decl, sent_uso, sent_flujo, 
+asignacion, condicional, bucle;
+non terminal Double exprNum, term, factor;      // used to store evaluated subexpressions
+non terminal Boolean exprBool;
+non terminal String tipo, decl_variable;
+
+/* Precedences */
+precedence left AND, OR;  
+precedence nonassoc MORETHAN, LESSTHAN, ISEQUAL; 
+precedence left PLUS, MINUS;  
+precedence left TIMES, DIVISION;
+precedence left UMINUS;
+
 
 /* The grammar rules */			
-expr_list ::= 	expr_list expr:e SEMI          {: System.out.println(e); 			  :}
-            	| expr:e SEMI                  {: System.out.println(e); 			  :}
+sentencia  ::=  sent_decl:e                 {:  			  :}
+            	| sent_uso:e                 {:  			  :}
+            	| sent_flujo:e                 {:  			  :}
             	;
-            
-expr      ::= 	expr:e PLUS   term:t           {: RESULT = e+t;        			      :}
-	            | expr:e MINUS term:t          {: RESULT = e-t;  				      :}        
-	 	 	 	| term:t					   {: RESULT = t;  				          :}
+sent_decl  ::= decl_variable  			 {:  	:}
+				;
+decl_variable ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e SEMI    {: System.out.println(t + " " + i + " " + ":=" + " " + e ); 	:}
+				    |tipo IDENTIFIER ASIGNATION exprBool SEMI    {:  	:} 
+					|tipo:t IDENTIFIER:i SEMI 			{:    System.out.println(t + " " + i );	:}
+				;
+tipo       ::=  ENTERO								        {: RESULT =  "ENTERO";	:}
+					| REAL    							{: RESULT =  "REAL"; :}
+					| BOOLEANO							{: RESULT =  "BOOLEANO"; 	:}
+					| CARACTER  							{: RESULT =  "CARACTER"; 	:}
+				;	
+exprNum      ::= 	exprNum:e PLUS   exprNum:e1          {: RESULT = e+e1;        			      :}
+	            | exprNum:e MINUS exprNum: e1          {: RESULT = e-e1;  				      :}
+	            | exprNum:e TIMES exprNum: e1          {: RESULT = e*e1;  				      :} 
+	            | exprNum:e DIVISION exprNum: e1          {: RESULT = e/e1;  				      :}
+	            %prec UMINUS
+	            | LPAREN exprNum:e RPAREN          {: RESULT = e;                         :}
+				| NUMBER: n				   {: RESULT = n;                         :}
 	 	 	 	;
-
-term      ::=  	 term:t TIMES factor:f         {: RESULT = t*f;        			      :}
-	             | term:t DIVISION factor:f    {: RESULT = t/f;        			      :}                             			  
-	             | factor:f					   {: RESULT = f;  				   		  :}
-	             ;
-
-factor    ::=    LPAREN expr:e RPAREN          {: RESULT = e;                         :}
-				 | NUMBER: n				   {: RESULT = n;                         :}
-				 | CHAR: c				       {: System.out.println(c);              :}
-				 | IDENTIFIER: i			   {: System.out.println(i);              :}				   				   
-	             | ARRAYMEM:n                  {: RESULT = MEM[n];                    :}
-	             | PLUSPLUS ARRAYMEM:n         {: MEM[n] = ++MEM[n]; RESULT = MEM[n]; :}
-	             | ARRAYMEM:n PLUSPLUS         {: RESULT = MEM[n]; MEM[n] = MEM[n]+1; :}
-	             | ARRAYMEM:n MINUSMINUS       {: RESULT = MEM[n]; MEM[n] = MEM[n]-1; :}
-	             | MINUSMINUS ARRAYMEM:n       {: MEM[n] = --MEM[n]; RESULT = MEM[n]; :}
-	             | LOG factor:f                {: RESULT = Math.log10(f);             :}
-	             | LN factor:f                 {: RESULT = Math.log(f);               :}
-	             | EXP factor:f                {: RESULT = Math.exp(f);               :}
-	             | SIN factor:f                {: RESULT = Math.sin(f);               :}
-	             | COS factor:f                {: RESULT = Math.cos(f);               :}
-	             | ARRAYMEM:n EQUAL factor:f   {: MEM[n] = f;        RESULT = MEM[n]; :}
-	             | MINUS factor:f              {: RESULT = -f;                        :} 
-	             | PLUS factor:f               {: RESULT = +f;                        :}                                    
-	             ;
+	 	 	 	
+exprBool  ::=   exprNum:e LESSTHAN exprNum: e1          {: if ( e < e1) RESULT = true; 										
+																else RESULT = false;		 	  :} 
+	            | exprNum:e MORETHAN exprNum: e1          {: if ( e > e1) RESULT = true; 										
+																else RESULT = false;		 	  :} 
+	            | exprNum:e ISEQUAL exprNum: e1          {: if ( e == e1) RESULT = true; 										
+																else RESULT = false;		 	  :} 
+          		;     	

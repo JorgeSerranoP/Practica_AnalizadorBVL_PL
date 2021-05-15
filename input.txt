@@ -1,5 +1,9 @@
-'.';
-LOKILLO;
-h45_b_yt7;
-oR;
+REAL lol := 3;
+
+
+
+
+ 
+
+
 
