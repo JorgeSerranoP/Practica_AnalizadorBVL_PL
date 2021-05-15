@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 %implements sym
 %public
 %unicode
+%caseless
 %line
 %column
 %cup
@@ -71,6 +72,9 @@ Number     = [0-9]+
 RealNumber = [0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 HexNumber  = "0X"[0-9A-F]+|"0x"[0-9A-F]+
 ArrayMEM   = "MEM["[0-9][0-9]*"]"
+Character = '(.{1})'
+Identifier = [a-zA-Z_][a-zA-Z0-9_]*
+
 
 /* comments */
 Comment = {TraditionalComment} | {EndOfLineComment}
@@ -108,6 +112,33 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
   "sin"        { return symbolFactory.newSymbol("SIN", SIN); }
   "cos"        { return symbolFactory.newSymbol("COS", COS); }
   "="          { return symbolFactory.newSymbol("EQUAL", EQUAL); }
+  ":="         { return symbolFactory.newSymbol("ASIGNATION", ASIGNATION); }
+  "<"          { return symbolFactory.newSymbol("LESSTHAN", LESSTHAN); }
+  ">"          { return symbolFactory.newSymbol("MORETHAN", MORETHAN); }
+  "=="         { return symbolFactory.newSymbol("ISEQUAL", ISEQUAL); }  
+  "&"          { return symbolFactory.newSymbol("AND", AND); }  
+  "|"          { return symbolFactory.newSymbol("OR", OR); }
+  "¬"          { return symbolFactory.newSymbol("NOT", NOT); }
+  "True"       { return symbolFactory.newSymbol("TRUE", TRUE); }
+  "False"      { return symbolFactory.newSymbol("FALSE", FALSE); }
+  "And"        { return symbolFactory.newSymbol("AND", AND); }
+  "Or"         { return symbolFactory.newSymbol("OR", OR); }
+  "Not"        { return symbolFactory.newSymbol("NOT", NOT); }
+  "Entero"     { return symbolFactory.newSymbol("ENTERO", ENTERO); }
+  "Real"       { return symbolFactory.newSymbol("REAL", REAL); }
+  "Finmientras" { return symbolFactory.newSymbol("FINMIENTRAS", FINMIENTRAS); }
+  "Booleano"   { return symbolFactory.newSymbol("BOOLEANO", BOOLEANO); }
+  "Vector"     { return symbolFactory.newSymbol("VECTOR", VECTOR); }
+  "Caracter"   { return symbolFactory.newSymbol("CARACTER", CARACTER); }
+  "Mientras"   { return symbolFactory.newSymbol("MIENTRAS", MIENTRAS); }
+  "Si"         { return symbolFactory.newSymbol("SI", SI); }
+  "Entrada"    { return symbolFactory.newSymbol("ENTRADA", ENTRADA); }
+  "Entonces"   { return symbolFactory.newSymbol("ENTONCES", ENTONCES); }
+  "Sino"       { return symbolFactory.newSymbol("SINO", SINO); }
+  "Si"         { return symbolFactory.newSymbol("SI", SI); }
+  "Finsi"      { return symbolFactory.newSymbol("FINSI", FINSI); }
+  {Character}  { return symbolFactory.newSymbol("CHAR", CHAR, yytext().charAt(1)); }
+  {Identifier} { return symbolFactory.newSymbol("IDENTIFIER", IDENTIFIER, yytext()); }
   {Number}     { return symbolFactory.newSymbol("NUMBER", NUMBER, Double.parseDouble(yytext())); }
   {RealNumber} { return symbolFactory.newSymbol("NUMBER", NUMBER, Double.parseDouble(yytext()));}
   {HexNumber}  { return symbolFactory.newSymbol("NUMBER", NUMBER, Double.valueOf(Integer.decode(yytext())));}
