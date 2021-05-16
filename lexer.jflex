@@ -97,20 +97,16 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 
   {Whitespace} { }
   ";"          { return symbolFactory.newSymbol("SEMI", SEMI); }
+  ","          { return symbolFactory.newSymbol("COMA", COMA); }
   "+"          { return symbolFactory.newSymbol("PLUS", PLUS); }
-  "++"         { return symbolFactory.newSymbol("PLUSPLUS", PLUSPLUS); }  
   "-"          { return symbolFactory.newSymbol("MINUS", MINUS); }
-  "--"         { return symbolFactory.newSymbol("MINUSMINUS", MINUSMINUS); }
   "*"          { return symbolFactory.newSymbol("TIMES", TIMES); }
   "/"          { return symbolFactory.newSymbol("DIVISION", DIVISION); }
   "n"          { return symbolFactory.newSymbol("UMINUS", UMINUS); }
   "("          { return symbolFactory.newSymbol("LPAREN", LPAREN); }
   ")"          { return symbolFactory.newSymbol("RPAREN", RPAREN); }
-  "log"		   { return symbolFactory.newSymbol("LOG", LOG); }
-  "Ln"		   { return symbolFactory.newSymbol("LN", LN); }
-  "exp"		   { return symbolFactory.newSymbol("EXP", EXP); }
-  "sin"        { return symbolFactory.newSymbol("SIN", SIN); }
-  "cos"        { return symbolFactory.newSymbol("COS", COS); }
+  "["          { return symbolFactory.newSymbol("LBRACKET", LBRACKET); }
+  "]"          { return symbolFactory.newSymbol("RBRACKET", RBRACKET); }
   "="          { return symbolFactory.newSymbol("EQUAL", EQUAL); }
   ":="         { return symbolFactory.newSymbol("ASIGNATION", ASIGNATION); }
   "<"          { return symbolFactory.newSymbol("LESSTHAN", LESSTHAN); }
@@ -127,7 +123,7 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
   "Entero"     { return symbolFactory.newSymbol("ENTERO", ENTERO); }
   "Real"       { return symbolFactory.newSymbol("REAL", REAL); }
   "Finmientras" { return symbolFactory.newSymbol("FINMIENTRAS", FINMIENTRAS); }
-  "Booleano"   { return symbolFactory.newSymbol("BOOLEANO", BOOLEANO); }
+  "Booleano"    { return symbolFactory.newSymbol("BOOLEANO", BOOLEANO); }
   "Vector"     { return symbolFactory.newSymbol("VECTOR", VECTOR); }
   "Caracter"   { return symbolFactory.newSymbol("CARACTER", CARACTER); }
   "Mientras"   { return symbolFactory.newSymbol("MIENTRAS", MIENTRAS); }

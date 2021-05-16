@@ -1,9 +1,3 @@
-REAL lol := 3;
-
-
-
-
- 
-
-
-
+REAL re1, re2;
+b:=ENTRADA;
+CARACTER ca := 'h';
