@@ -1136,6 +1136,7 @@ class CUP$Parser$actions {
 		Object e2 = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		//@@CUPDBG53
  if(e) RESULT = e1;
+
 																				    else RESULT = e2; 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("condicional",5, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-6)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }

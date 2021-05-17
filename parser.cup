@@ -10,6 +10,7 @@ import cup.example.Lexer;
 import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Scanner; 
 
 parser code {:
   protected Lexer lexer;
@@ -40,20 +41,20 @@ scan with {: return lexer.next_token(); :};
 
 /* Terminals (tokens returned by the scanner). */
 terminal           SEMI, PLUS, MINUS, TIMES, DIVISION, UMINUS, LPAREN, RPAREN,
-LOG, EXP, LN, SIN, COS, EQUAL, PLUSPLUS, MINUSMINUS, TRUE, FALSE, ASIGNATION,
-MORETHAN, LESSTHAN, ISEQUAL, AND, NOT, OR, FINMIENTRAS,
-VECTOR, MIENTRAS, SI, ENTRADA, ENTONCES, SINO, FINSI;
+EQUAL, TRUE, FALSE, ASIGNATION, MORETHAN, LESSTHAN, ISEQUAL, AND, NOT, OR, 
+FINMIENTRAS, VECTOR, MIENTRAS, SI, ENTRADA, ENTONCES, SINO, FINSI, COMA, LBRACKET, RBRACKET;
 terminal Double    NUMBER;        // our scanner provides numbers as doubles
 terminal Integer   ARRAYMEM;
 terminal Character CHAR;
 terminal String IDENTIFIER, ENTERO, REAL, BOOLEANO, CARACTER;
 
 /* Non terminals */
-non terminal  sentencia, sent_decl, sent_uso, sent_flujo, 
-asignacion, condicional, bucle;
+non terminal  sentencia, varDecl, sent_uso, sent_flujo, 
+asignacion, condicional, bucle, expr_list, doubleDecl;
 non terminal Double exprNum, term, factor;      // used to store evaluated subexpressions
 non terminal Boolean exprBool;
-non terminal String tipo, decl_variable;
+non terminal String tipo, decl_variable, exprVector;
+non terminal Character exprChar;
 
 /* Precedences */
 precedence left AND, OR;  
@@ -61,37 +62,79 @@ precedence nonassoc MORETHAN, LESSTHAN, ISEQUAL;
 precedence left PLUS, MINUS;  
 precedence left TIMES, DIVISION;
 precedence left UMINUS;
-
+start with expr_list;
 
 /* The grammar rules */			
-sentencia  ::=  sent_decl:e                 {:  			  :}
-            	| sent_uso:e                 {:  			  :}
-            	| sent_flujo:e                 {:  			  :}
-            	;
-sent_decl  ::= decl_variable  			 {:  	:}
-				;
-decl_variable ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e SEMI    {: System.out.println(t + " " + i + " " + ":=" + " " + e ); 	:}
-				    |tipo IDENTIFIER ASIGNATION exprBool SEMI    {:  	:} 
-					|tipo:t IDENTIFIER:i SEMI 			{:    System.out.println(t + " " + i );	:}
-				;
-tipo       ::=  ENTERO								        {: RESULT =  "ENTERO";	:}
-					| REAL    							{: RESULT =  "REAL"; :}
-					| BOOLEANO							{: RESULT =  "BOOLEANO"; 	:}
-					| CARACTER  							{: RESULT =  "CARACTER"; 	:}
+expr_list ::= expr_list exprNum:e SEMI         {: System.out.println(e);:}
+            |exprNum:e SEMI                    {: System.out.println(e); :}
+            |expr_list exprBool:e SEMI         {: System.out.println(e); :}
+            |exprBool:e SEMI                   {: System.out.println(e); :}
+            |expr_list exprChar:e SEMI         {: System.out.println(e); :}
+            |exprChar:e SEMI                   {: System.out.println(e); :}
+            |expr_list varDecl SEMI         {:  :}
+            |varDecl SEMI                   {:  :}
+            |expr_list sent_flujo          	{:  :}
+            |sent_flujo  					{:  :}
+            ;
+tipo       ::=  ENTERO 							{: RESULT =  "ENTERO";	:}
+				| REAL 							{: RESULT =  "REAL"; :}
+				| BOOLEANO 						{: RESULT =  "BOOLEANO"; 	:}
+				| CARACTER  					{: RESULT =  "CARACTER"; 	:}			
 				;	
-exprNum      ::= 	exprNum:e PLUS   exprNum:e1          {: RESULT = e+e1;        			      :}
+exprNum      ::= exprNum:e PLUS   exprNum:e1          {: RESULT = e+e1;        			      :}
 	            | exprNum:e MINUS exprNum: e1          {: RESULT = e-e1;  				      :}
 	            | exprNum:e TIMES exprNum: e1          {: RESULT = e*e1;  				      :} 
 	            | exprNum:e DIVISION exprNum: e1          {: RESULT = e/e1;  				      :}
-	            %prec UMINUS
-	            | LPAREN exprNum:e RPAREN          {: RESULT = e;                         :}
-				| NUMBER: n				   {: RESULT = n;                         :}
-	 	 	 	;
-	 	 	 	
-exprBool  ::=   exprNum:e LESSTHAN exprNum: e1          {: if ( e < e1) RESULT = true; 										
+	            | MINUS exprNum:e                 {: RESULT = -e;           :}
+	            | PLUS exprNum:e                 {: RESULT = +e;           :}	       
+	            | LPAREN exprNum:e RPAREN          {: RESULT = e;                        :}
+				| NUMBER: n				   {: RESULT = n;                      :}
+				;
+varDecl		  ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     {: System.out.println(t +  i +  " := "  + e ); 	:}
+				|tipo:t IDENTIFIER:i ASIGNATION exprBool:e     {: System.out.println(t +  i +  " := "  + e ); 	:}
+				|tipo:t IDENTIFIER:i ASIGNATION exprChar:e     {: System.out.println(t +  i + " := "  + e ); 	:}
+				|tipo:t  IDENTIFIER:i			{:    System.out.println(t + " " + i );	:}
+				|tipo:t  IDENTIFIER:i COMA doubleDecl			{:    System.out.println(t + " " + i );	:}				
+				|IDENTIFIER:i ASIGNATION exprNum:e		{:    System.out.println(i + " := " + e );	:}
+				|IDENTIFIER:i ASIGNATION ENTRADA		{:    Scanner leer=new Scanner(System.in); 
+															  System.out.println( "Introduzca la entrada:  " );
+															  String input=leer.nextLine(); System.out.println( i + " := " + input );	:}
+				|IDENTIFIER:i ASIGNATION exprBool:e		{:    System.out.println(i + " := " + e );	:}
+				|IDENTIFIER:i ASIGNATION exprChar:e		{:    System.out.println(i + " := " + e );	:}
+				|VECTOR tipo:t IDENTIFIER:i exprVector:e     {: System.out.println("VECTOR" + " " + t + " " + i + e ); 	:}
+				|IDENTIFIER:i exprVector:e ASIGNATION exprNum:e1  {: System.out.println( i + e + " := "  + e1 ); 	:}
+				|IDENTIFIER:i exprVector:e ASIGNATION exprBool:e1  {: System.out.println( i + e + " := "  + e1 ); 	:}
+				|IDENTIFIER:i exprVector:e ASIGNATION exprChar:e1  {: System.out.println( i + e + " := "  + e1 ); 	:}				
+          		;
+doubleDecl    ::= IDENTIFIER 							{:  :}
+				| IDENTIFIER COMA doubleDecl			{:  :}
+				;
+          		 	 	 
+exprBool      ::= exprNum:e LESSTHAN exprNum: e1          {: if ( e < e1) RESULT = true; 										
 																else RESULT = false;		 	  :} 
-	            | exprNum:e MORETHAN exprNum: e1          {: if ( e > e1) RESULT = true; 										
+	            |exprNum:e MORETHAN exprNum: e1          {: if ( e > e1) RESULT = true; 										
 																else RESULT = false;		 	  :} 
-	            | exprNum:e ISEQUAL exprNum: e1          {: if ( e == e1) RESULT = true; 										
-																else RESULT = false;		 	  :} 
-          		;     	
+	            |exprNum:e ISEQUAL exprNum: e1          {: if ( e == e1) RESULT = true; 										
+																else RESULT = false;		 	  :}
+				|TRUE									{: RESULT = true;  :}
+				|FALSE									{: RESULT = false; :}
+				|exprBool:e AND exprBool:e1				{: if (e && e1) RESULT = true;
+																else RESULT = false; :}
+			    |exprBool:e OR exprBool:e1				{: if (e || e1) RESULT = true;
+																else RESULT = false; :}
+				;				
+exprChar      ::= CHAR:c								{: RESULT = c;                         :}
+				;
+exprVector    ::= LBRACKET:b NUMBER:n RBRACKET:b1 exprVector:e	{: RESULT = "[" + Double.toString(n) + "]" + e;  :}
+				| LBRACKET:b NUMBER:n RBRACKET:b1				{: RESULT = "[" + Double.toString(n) + "]"; :}
+				;
+sent_flujo    ::= condicional							{:  :}
+				|bucle									{:  :}
+			  ;
+condicional   ::= SI exprBool:e ENTONCES expr_list:e1 FINSI {: if(e) RESULT = e1; :}
+				| SI exprBool:e ENTONCES expr_list:e1 SINO expr_list:e2 FINSI {: if(e) RESULT = e1;
+																				    else RESULT = e2; :}
+			  ;
+bucle		  ::= MIENTRAS exprBool:e expr_list:e1 FINMIENTRAS {: while(e) RESULT = e1;  :}
+				;			  			  
+				 	 	 	 	     	
