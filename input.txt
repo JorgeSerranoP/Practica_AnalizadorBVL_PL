@@ -1,3 +1,4 @@
-REAL re1, re2;
-b:=ENTRADA;
-CARACTER ca := 'h';
+ENTERO ca := 2;
+booleano lo1 := 1>0;
+caracter de;
+de := 'a';

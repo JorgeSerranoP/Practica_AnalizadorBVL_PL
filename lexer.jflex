@@ -4,6 +4,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 import java_cup.runtime.Symbol;
 import java.lang.*;
 import java.io.InputStreamReader;
+import java.util.*;
 
 %%
 
@@ -64,6 +65,7 @@ import java.io.InputStreamReader;
     	System.out.println("scanner error: " + message + " at : 2" + 
     			(yyline+1) + " " + (yycolumn+1) + " " + yychar);
     }
+    
 %}
 
 Newline    = \r | \n | \r\n

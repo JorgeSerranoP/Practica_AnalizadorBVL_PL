@@ -14,13 +14,11 @@ import java.util.Scanner;
 
 parser code {:
   protected Lexer lexer;
-  /* Initiate array values to 0 */
-  Double MEM[] = new Double[100];
-  {
-    for (int i = 0; i<MEM.length; i++){
-      MEM[i] = 0.0;
-    }
-  }
+  public tablaSimbolos tabla = new tablaSimbolos();
+:};
+
+action code {:
+  
 :};
 
 /* define how to connect to the scanner! */
@@ -88,19 +86,25 @@ exprNum      ::= exprNum:e PLUS   exprNum:e1          {: RESULT = e+e1;        	
 	            | MINUS exprNum:e                 {: RESULT = -e;           :}
 	            | PLUS exprNum:e                 {: RESULT = +e;           :}	       
 	            | LPAREN exprNum:e RPAREN          {: RESULT = e;                        :}
-				| NUMBER: n				   {: RESULT = n;                      :}
+				| NUMBER: n				   {: RESULT = n;                      :}			
 				;
-varDecl		  ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     {: System.out.println(t +  i +  " := "  + e ); 	:}
-				|tipo:t IDENTIFIER:i ASIGNATION exprBool:e     {: System.out.println(t +  i +  " := "  + e ); 	:}
-				|tipo:t IDENTIFIER:i ASIGNATION exprChar:e     {: System.out.println(t +  i + " := "  + e ); 	:}
-				|tipo:t  IDENTIFIER:i			{:    System.out.println(t + " " + i );	:}
+
+varDecl		  ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     {: tabla.insertar(t,i,e,null,null); tabla.imprimir(); 	:}
+				|tipo:t IDENTIFIER:i ASIGNATION exprBool:e     {: tabla.insertar(t,i,null,e,null); tabla.imprimir();	:}
+				|tipo:t IDENTIFIER:i ASIGNATION exprChar:e     {: tabla.insertar(t,i,null,null,e); tabla.imprimir(); 	:}
+				|tipo:t  IDENTIFIER:i			{:    tabla.insertar(t,i,null,null,null); tabla.imprimir();	:}
 				|tipo:t  IDENTIFIER:i COMA doubleDecl			{:    System.out.println(t + " " + i );	:}				
-				|IDENTIFIER:i ASIGNATION exprNum:e		{:    System.out.println(i + " := " + e );	:}
+				|IDENTIFIER:i ASIGNATION exprNum:e		{:    simboloLista s = tabla.buscar(i);
+															  tabla.insertar(s.tipo,i,e,null,null); tabla.imprimir();	:}
 				|IDENTIFIER:i ASIGNATION ENTRADA		{:    Scanner leer=new Scanner(System.in); 
 															  System.out.println( "Introduzca la entrada:  " );
-															  String input=leer.nextLine(); System.out.println( i + " := " + input );	:}
-				|IDENTIFIER:i ASIGNATION exprBool:e		{:    System.out.println(i + " := " + e );	:}
-				|IDENTIFIER:i ASIGNATION exprChar:e		{:    System.out.println(i + " := " + e );	:}
+															  String input=leer.nextLine(); 
+															  simboloLista s = tabla.buscar(i);
+															  tabla.insertar(s.tipo,i,Double.parseDouble(input),null,null); tabla.imprimir();	:}
+				|IDENTIFIER:i ASIGNATION exprBool:e		{:    simboloLista s = tabla.buscar(i);
+															  tabla.insertar(s.tipo,i,null,e,null); tabla.imprimir();	:}
+				|IDENTIFIER:i ASIGNATION exprChar:e		{:    simboloLista s = tabla.buscar(i);
+															  tabla.insertar(s.tipo,i,null,null,e); tabla.imprimir();	:}
 				|VECTOR tipo:t IDENTIFIER:i exprVector:e     {: System.out.println("VECTOR" + " " + t + " " + i + e ); 	:}
 				|IDENTIFIER:i exprVector:e ASIGNATION exprNum:e1  {: System.out.println( i + e + " := "  + e1 ); 	:}
 				|IDENTIFIER:i exprVector:e ASIGNATION exprBool:e1  {: System.out.println( i + e + " := "  + e1 ); 	:}
