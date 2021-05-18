@@ -15,10 +15,10 @@ import java.util.Scanner;
 parser code {:
   protected Lexer lexer;
   public tablaSimbolos tabla = new tablaSimbolos();
+  String id = "";
 :};
 
 action code {:
-  
 :};
 
 /* define how to connect to the scanner! */
@@ -48,10 +48,10 @@ terminal String IDENTIFIER, ENTERO, REAL, BOOLEANO, CARACTER;
 
 /* Non terminals */
 non terminal  sentencia, varDecl, sent_uso, sent_flujo, 
-asignacion, condicional, bucle, expr_list, doubleDecl;
+asignacion, condicional, bucle, expr_list;
 non terminal Double exprNum, term, factor;      // used to store evaluated subexpressions
 non terminal Boolean exprBool;
-non terminal String tipo, decl_variable, exprVector;
+non terminal String tipo, decl_variable, exprVector, doubleDecl, doubleDeclExtra;
 non terminal Character exprChar;
 
 /* Precedences */
@@ -86,14 +86,16 @@ exprNum      ::= exprNum:e PLUS   exprNum:e1          {: RESULT = e+e1;        	
 	            | MINUS exprNum:e                 {: RESULT = -e;           :}
 	            | PLUS exprNum:e                 {: RESULT = +e;           :}	       
 	            | LPAREN exprNum:e RPAREN          {: RESULT = e;                        :}
-				| NUMBER: n				   {: RESULT = n;                      :}			
+				| NUMBER: n				   {: RESULT = n;                      :}
+				| IDENTIFIER:i					{: simboloLista s = tabla.buscar(i); RESULT = s.valorD; :}
 				;
 
 varDecl		  ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     {: tabla.insertar(t,i,e,null,null); tabla.imprimir(); 	:}
 				|tipo:t IDENTIFIER:i ASIGNATION exprBool:e     {: tabla.insertar(t,i,null,e,null); tabla.imprimir();	:}
 				|tipo:t IDENTIFIER:i ASIGNATION exprChar:e     {: tabla.insertar(t,i,null,null,e); tabla.imprimir(); 	:}
 				|tipo:t  IDENTIFIER:i			{:    tabla.insertar(t,i,null,null,null); tabla.imprimir();	:}
-				|tipo:t  IDENTIFIER:i COMA doubleDecl			{:    System.out.println(t + " " + i );	:}				
+				|tipo:t  IDENTIFIER:i COMA doubleDecl:d			{:tabla.insertar(t,i,null,null,null); tabla.insertar(t,d,null,null,null); 
+																  tabla.insertar(t,id,null,null,null); tabla.imprimir(); :}				
 				|IDENTIFIER:i ASIGNATION exprNum:e		{:    simboloLista s = tabla.buscar(i);
 															  tabla.insertar(s.tipo,i,e,null,null); tabla.imprimir();	:}
 				|IDENTIFIER:i ASIGNATION ENTRADA		{:    Scanner leer=new Scanner(System.in); 
@@ -110,10 +112,10 @@ varDecl		  ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     {: tabla.insertar(t,
 				|IDENTIFIER:i exprVector:e ASIGNATION exprBool:e1  {: System.out.println( i + e + " := "  + e1 ); 	:}
 				|IDENTIFIER:i exprVector:e ASIGNATION exprChar:e1  {: System.out.println( i + e + " := "  + e1 ); 	:}				
           		;
-doubleDecl    ::= IDENTIFIER 							{:  :}
-				| IDENTIFIER COMA doubleDecl			{:  :}
+doubleDecl    ::= IDENTIFIER:i 							{: RESULT = i; :}
+				| IDENTIFIER:i COMA doubleDecl:d			{: RESULT = i; id = d; :}
 				;
-          		 	 	 
+         		 	 	 
 exprBool      ::= exprNum:e LESSTHAN exprNum: e1          {: if ( e < e1) RESULT = true; 										
 																else RESULT = false;		 	  :} 
 	            |exprNum:e MORETHAN exprNum: e1          {: if ( e > e1) RESULT = true; 										
@@ -140,5 +142,4 @@ condicional   ::= SI exprBool:e ENTONCES expr_list:e1 FINSI {: if(e) RESULT = e1
 																				    else RESULT = e2; :}
 			  ;
 bucle		  ::= MIENTRAS exprBool:e expr_list:e1 FINMIENTRAS {: while(e) RESULT = e1;  :}
-				;			  			  
-				 	 	 	 	     	
+				;			  			  			 	 	 	 	     	

@@ -1,4 +1,6 @@
-ENTERO ca := 2;
-booleano lo1 := 1>0;
-caracter de;
-de := 'a';
+REAL num := 1;
+BOOLEANO espos;
+SI num > 0 
+ENTONCES
+espos:=TRUE;
+FINSI
