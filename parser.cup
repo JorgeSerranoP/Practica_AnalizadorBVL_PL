@@ -47,9 +47,8 @@ terminal Character CHAR;
 terminal String IDENTIFIER, ENTERO, REAL, BOOLEANO, CARACTER;
 
 /* Non terminals */
-non terminal  sentencia, varDecl, sent_uso, sent_flujo, 
-asignacion, condicional, bucle, expr_list;
-non terminal Double exprNum, term, factor;      // used to store evaluated subexpressions
+non terminal  sentencia, varDecl, sent_flujo, asignacion, condicional, bucle, expr_list;
+non terminal Double exprNum;      // used to store evaluated subexpressions
 non terminal Boolean exprBool;
 non terminal String tipo, decl_variable, doubleDecl, doubleDeclExtra;
 non terminal Integer exprVector;
@@ -64,85 +63,93 @@ precedence left UMINUS;
 start with expr_list;
 
 /* The grammar rules */			
-expr_list ::= expr_list exprNum:e SEMI         {: System.out.println(e); :}
-            |exprNum:e SEMI                    {: System.out.println(e); :}
-            |expr_list exprBool:e SEMI         {: System.out.println(e); :}
-            |exprBool:e SEMI                   {: System.out.println(e); :}
-            |expr_list exprChar:e SEMI         {: System.out.println(e); :}
-            |exprChar:e SEMI                   {: System.out.println(e); :}
-            |expr_list varDecl SEMI         {: tabla.imprimir(); :}
-            |varDecl SEMI                   {:  :}
-            |expr_list sent_flujo          	{:  :}
-            |sent_flujo  					{:  :}
-            ;
-tipo       ::=  ENTERO 							{: RESULT =  "ENTERO";	:}
-				| REAL 							{: RESULT =  "REAL"; :}
-				| BOOLEANO 						{: RESULT =  "BOOLEANO"; 	:}
-				| CARACTER  					{: RESULT =  "CARACTER"; 	:}			
+expr_list 		::= expr_list exprNum:e SEMI        					{: System.out.println(e); :}
+            	| exprNum:e SEMI                	    				{: System.out.println(e); :}
+            	| expr_list exprBool:e SEMI      						{: System.out.println(e); :}
+            	| exprBool:e SEMI               	    				{: System.out.println(e); :}
+            	| expr_list exprChar:e SEMI     	    				{: System.out.println(e); :}
+           		| exprChar:e SEMI               	    				{: System.out.println(e); :}
+            	| expr_list varDecl SEMI         						{: tabla.imprimir(); 	  :}
+            	| varDecl SEMI                   						{:  :}
+            	| expr_list sent_flujo          						{:  :}
+            	| sent_flujo  											{:  :}
+            	;
+            	
+tipo      		::= ENTERO 												{: RESULT =  "ENTERO";		:}
+				| REAL 													{: RESULT =  "REAL"; 		:}
+				| BOOLEANO 												{: RESULT =  "BOOLEANO"; 	:}
+				| CARACTER  											{: RESULT =  "CARACTER"; 	:}			
 				;	
-exprNum      ::= exprNum:e PLUS   exprNum:e1          {: RESULT = e+e1;        			      :}
-	            | exprNum:e MINUS exprNum: e1          {: RESULT = e-e1;  				      :}
-	            | exprNum:e TIMES exprNum: e1          {: RESULT = e*e1;  				      :} 
-	            | exprNum:e DIVISION exprNum: e1          {: RESULT = e/e1;  				      :}
-	            | MINUS exprNum:e                 {: RESULT = -e;           :}
-	            | PLUS exprNum:e                 {: RESULT = +e;           :}	       
-	            | LPAREN exprNum:e RPAREN          {: RESULT = e;                        :}
-				| NUMBER: n				   {: RESULT = n;                      :}
-				| IDENTIFIER:i					{: simboloLista s = tabla.buscar(i); RESULT = s.valorD; :}
+				
+exprNum         ::= exprNum:e PLUS exprNum:e1          					{: RESULT = e+e1;        	:}
+	            | exprNum:e MINUS exprNum: e1          					{: RESULT = e-e1;  			:}
+	            | exprNum:e TIMES exprNum: e1          					{: RESULT = e*e1;  			:} 
+	            | exprNum:e DIVISION exprNum: e1          				{: RESULT = e/e1;  			:}
+	            | MINUS exprNum:e                 						{: RESULT = -e;             :}
+	            | PLUS exprNum:e                 						{: RESULT = +e;             :}	       
+	            | LPAREN exprNum:e RPAREN          						{: RESULT = e;              :}
+				| NUMBER: n				   								{: RESULT = n;              :}
+				| IDENTIFIER:i											{: simboloLista s = tabla.buscar(i); RESULT = s.valorD; :}
 				;
 
-varDecl		  ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     {: tabla.insertar(t,i,e,null,null); tabla.imprimir(); 	:}
-				|tipo:t IDENTIFIER:i ASIGNATION exprBool:e     {: tabla.insertar(t,i,null,e,null); tabla.imprimir();	:}
-				|tipo:t IDENTIFIER:i ASIGNATION exprChar:e     {: tabla.insertar(t,i,null,null,e); tabla.imprimir(); 	:}
-				|tipo:t  IDENTIFIER:i			{:    tabla.insertar(t,i,null,null,null); tabla.imprimir();	:}
-				|tipo:t  IDENTIFIER:i COMA doubleDecl:d			{:tabla.insertar(t,i,null,null,null); tabla.insertar(t,d,null,null,null); 
-																  tabla.insertar(t,id,null,null,null); tabla.imprimir(); :}				
-				|IDENTIFIER:i ASIGNATION exprNum:e		{:    simboloLista s = tabla.buscar(i);
-															  tabla.insertar(s.tipo,i,e,null,null); tabla.imprimir();	:}
-				|IDENTIFIER:i ASIGNATION ENTRADA		{:    Scanner leer=new Scanner(System.in); 
-															  System.out.println( "Introduzca la entrada:  " );
-															  String input=leer.nextLine(); 
-															  simboloLista s = tabla.buscar(i);
-															  tabla.insertar(s.tipo,i,Double.parseDouble(input),null,null); tabla.imprimir();	:}
-				|IDENTIFIER:i ASIGNATION exprBool:e		{:    simboloLista s = tabla.buscar(i);
-															  tabla.insertar(s.tipo,i,null,e,null); tabla.imprimir();	:}
-				|IDENTIFIER:i ASIGNATION exprChar:e		{:    simboloLista s = tabla.buscar(i);
-															  tabla.insertar(s.tipo,i,null,null,e); tabla.imprimir();	:}
-				|VECTOR tipo:t IDENTIFIER:i LBRACKET:b NUMBER:n RBRACKET:b1  {: tabla.insertarVector(t,i,null,null,null,n.intValue(),null);	:}
-				|VECTOR tipo:t IDENTIFIER:i LBRACKET NUMBER:n RBRACKET LBRACKET NUMBER:n1 RBRACKET {: tabla.insertarVector(t,i,null,null,null,n.intValue(),n1.intValue()); tabla.imprimir();	:}				
-				|IDENTIFIER:i exprVector:e ASIGNATION exprNum:e1  {: simboloLista s = tabla.buscar(i); s.valorDVector[e] = e1;  tabla.put(i, s);	:}
-				|IDENTIFIER:i exprVector:e ASIGNATION exprBool:e1  {: simboloLista s = tabla.buscar(i); s.valorBVector[e] = e1;  tabla.put(i, s); 	:}
-				|IDENTIFIER:i exprVector:e ASIGNATION exprChar:e1  {: simboloLista s = tabla.buscar(i); s.valorCVector[e] = e1;  tabla.put(i, s); 	:}				
+varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{: tabla.insertar(t,i,e,null,null); tabla.imprimir(); 	:}
+				| tipo:t IDENTIFIER:i ASIGNATION exprBool:e     		{: tabla.insertar(t,i,null,e,null); tabla.imprimir();	:}
+				| tipo:t IDENTIFIER:i ASIGNATION exprChar:e     		{: tabla.insertar(t,i,null,null,e); tabla.imprimir(); 	:}
+				| tipo:t  IDENTIFIER:i									{: tabla.insertar(t,i,null,null,null); tabla.imprimir();	:}
+				| tipo:t  IDENTIFIER:i COMA doubleDecl:d				{: tabla.insertar(t,i,null,null,null); tabla.insertar(t,d,null,null,null); 
+																  		tabla.insertar(t,id,null,null,null); tabla.imprimir(); :}				
+				| IDENTIFIER:i ASIGNATION exprNum:e						{: simboloLista s = tabla.buscar(i);
+															  			tabla.insertar(s.tipo,i,e,null,null); tabla.imprimir();	:}
+				| IDENTIFIER:i ASIGNATION ENTRADA						{: Scanner leer=new Scanner(System.in); 
+															  			System.out.println( "Introduzca la entrada: ");
+															  			String input=leer.nextLine(); 
+															  			simboloLista s = tabla.buscar(i);
+															  			tabla.insertar(s.tipo,i,Double.parseDouble(input),null,null); tabla.imprimir();	:}
+				| IDENTIFIER:i ASIGNATION exprBool:e					{: simboloLista s = tabla.buscar(i);
+															  			tabla.insertar(s.tipo,i,null,e,null); tabla.imprimir();	:}
+				| IDENTIFIER:i ASIGNATION exprChar:e					{: simboloLista s = tabla.buscar(i);
+															  			tabla.insertar(s.tipo,i,null,null,e); tabla.imprimir();	:}
+				| VECTOR tipo:t IDENTIFIER:i LBRACKET:b NUMBER:n RBRACKET:b1  								{: tabla.insertarVector(t,i,null,null,null,n.intValue(),null);	:}
+				| VECTOR tipo:t IDENTIFIER:i LBRACKET NUMBER:n RBRACKET LBRACKET NUMBER:n1 RBRACKET 		{: tabla.insertarVector(t,i,null,null,null,n.intValue(),n1.intValue()); tabla.imprimir();	:}				
+				| IDENTIFIER:i exprVector:e ASIGNATION exprNum:e1  											{: simboloLista s = tabla.buscar(i); s.valorDVector[e] = e1;  tabla.put(i, s);	:}
+				| IDENTIFIER:i exprVector:e ASIGNATION exprBool:e1  										{: simboloLista s = tabla.buscar(i); s.valorBVector[e] = e1;  tabla.put(i, s); 	:}
+				| IDENTIFIER:i exprVector:e ASIGNATION exprChar:e1 											{: simboloLista s = tabla.buscar(i); s.valorCVector[e] = e1;  tabla.put(i, s); 	:}				
           		;
-exprVector    ::= LBRACKET:b NUMBER:n RBRACKET:b1 	{: RESULT = n.intValue();  :}
+          		
+exprVector      ::= LBRACKET:b NUMBER:n RBRACKET:b1 					{: RESULT = n.intValue();  			:}
 				;
-doubleDecl    ::= IDENTIFIER:i 							{: RESULT = i; :}
-				| IDENTIFIER:i COMA doubleDecl:d			{: RESULT = i; id = d; :}
+				
+doubleDecl      ::= IDENTIFIER:i 										{: RESULT = i; 						:}
+				| IDENTIFIER:i COMA doubleDecl:d						{: RESULT = i; id = d; 				:}
 				;
          		 	 	 
-exprBool      ::= exprNum:e LESSTHAN exprNum: e1          {: if ( e < e1) RESULT = true; 										
-																else RESULT = false;		 	  :} 
-	            |exprNum:e MORETHAN exprNum: e1          {: if ( e > e1) RESULT = true; 										
-																else RESULT = false;		 	  :} 
-	            |exprNum:e ISEQUAL exprNum: e1          {: if ( e == e1) RESULT = true; 										
-																else RESULT = false;		 	  :}
-				|TRUE									{: RESULT = true;  :}
-				|FALSE									{: RESULT = false; :}
-				|exprBool:e AND exprBool:e1				{: if (e && e1) RESULT = true;
-																else RESULT = false; :}
-			    |exprBool:e OR exprBool:e1				{: if (e || e1) RESULT = true;
-																else RESULT = false; :}
-				|NOT exprBool:e1						{: if (e1) RESULT = false;
-																else RESULT = true; :}
-				;				
-exprChar      ::= CHAR:c								{: RESULT = c;                         :}
+exprBool        ::= exprNum:e LESSTHAN exprNum:e1          				{: if ( e < e1) RESULT = true; 										
+																		else RESULT = false;		 	  	:} 
+	            |exprNum:e MORETHAN exprNum:e1          				{: if ( e > e1) RESULT = true; 										
+																		else RESULT = false;		 	  	:} 
+	            |exprNum:e ISEQUAL exprNum:e1         					{: if ( e == e1) RESULT = true; 										
+																		else RESULT = false;		 	 	:}
+				|TRUE													{: RESULT = true;  					:}
+				|FALSE													{: RESULT = false; 					:}
+				|exprBool:e AND exprBool:e1								{: if (e && e1) RESULT = true;
+																		else RESULT = false; 				:}
+			    |exprBool:e OR exprBool:e1								{: if (e || e1) RESULT = true;
+																		else RESULT = false; 				:}
+				|NOT exprBool:e1										{: if (e1) RESULT = false;
+																		else RESULT = true; 				:}
 				;
-sent_flujo    ::= condicional							{:  :}
-				|bucle									{:  :}
-			  ;
-condicional   ::= SI exprBool:e ENTONCES expr_list:e1 FINSI {: if(e) RESULT = e1; :}
-				| SI exprBool:e ENTONCES expr_list:e1 SINO expr_list:e2 FINSI {: if(e) RESULT = e1;
-																				    else RESULT = e2; :}
-			  ;
-bucle		  ::= MIENTRAS exprBool:e expr_list:e1 FINMIENTRAS {: while(e) RESULT = e1;  :}
+				
+exprChar        ::= CHAR:c												{: RESULT = c;                      :}
+				;
+				
+sent_flujo      ::= condicional											{:  :}
+				|bucle													{:  :}
+			    ;
+			    
+condicional     ::= SI exprBool:e ENTONCES expr_list:e1 FINSI 												{: if(e) RESULT = e1; 			:}
+				| SI exprBool:e ENTONCES expr_list:e1 SINO expr_list:e2 FINSI 								{: if(e) RESULT = e1;
+																				   							else RESULT = e2; 				:}
+			    ;
+			  
+bucle		    ::= MIENTRAS exprBool:e expr_list:e1 FINMIENTRAS 											{: while(e) RESULT = e1;  		:}
 				;			  			  			 	 	 	 	     	
