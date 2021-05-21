@@ -9,10 +9,9 @@ package cup.example;
 public interface sym {
   /* terminals */
   public static final int LBRACKET = 29;
-  public static final int CHAR = 33;
-  public static final int ARRAYMEM = 32;
+  public static final int CHAR = 32;
   public static final int UMINUS = 7;
-  public static final int ENTERO = 35;
+  public static final int ENTERO = 34;
   public static final int SI = 23;
   public static final int LPAREN = 8;
   public static final int SEMI = 2;
@@ -22,7 +21,7 @@ public interface sym {
   public static final int NOT = 18;
   public static final int AND = 17;
   public static final int FINMIENTRAS = 20;
-  public static final int CARACTER = 38;
+  public static final int CARACTER = 37;
   public static final int SINO = 26;
   public static final int LESSTHAN = 15;
   public static final int OR = 19;
@@ -38,15 +37,15 @@ public interface sym {
   public static final int NUMBER = 31;
   public static final int ASIGNATION = 13;
   public static final int VECTOR = 21;
-  public static final int REAL = 36;
+  public static final int REAL = 35;
   public static final int TIMES = 5;
   public static final int ENTRADA = 24;
   public static final int MORETHAN = 14;
-  public static final int BOOLEANO = 37;
+  public static final int BOOLEANO = 36;
   public static final int FALSE = 12;
   public static final int FINSI = 27;
   public static final int DIVISION = 6;
-  public static final int IDENTIFIER = 34;
+  public static final int IDENTIFIER = 33;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -80,7 +79,6 @@ public interface sym {
   "LBRACKET",
   "RBRACKET",
   "NUMBER",
-  "ARRAYMEM",
   "CHAR",
   "IDENTIFIER",
   "ENTERO",

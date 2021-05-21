@@ -9,6 +9,9 @@ public class simboloLista {
 	Double valorDVector[];
 	Boolean valorBVector[];
 	Character valorCVector[];
+	Double valorDVector2[][];
+	Boolean valorBVector2[][];
+	Character valorCVector2[][];
 	Integer dimension1;
 	Integer dimension2;
 	
@@ -31,11 +34,11 @@ public class simboloLista {
 		this.valorC = valorC;
 		this.dimension1 = dimension1;
 		this.dimension2 = dimension2;
-		/*if (dimension2 != null) {
-			this.valorDVector = new Double[dimension1][dimension2];
-			this.valorBVector = new Boolean[dimension1][dimension2];
-			this.valorCVector = new Character[dimension1][dimension2];
-		}*/
+		if (dimension2 != null) {
+			this.valorDVector2 = new Double[dimension1][dimension2];
+			this.valorBVector2 = new Boolean[dimension1][dimension2];
+			this.valorCVector2 = new Character[dimension1][dimension2];
+		}
 	}
 	
 }

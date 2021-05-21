@@ -1,8 +1,4 @@
 VECTOR entero alumno [4];
 alumno [2] := 1;
-VECTOR booleano alumno1 [4];
-alumno1 [2] := 1 > 0;
-VECTOR caracter alumno2 [4];
-alumno2 [2] := 'a';
-VECTOR real alumno3 [4];
-alumno3 [2] := .1;
+VECTOR real alumno35 [4][2];
+alumno35 [2][1] := .1;

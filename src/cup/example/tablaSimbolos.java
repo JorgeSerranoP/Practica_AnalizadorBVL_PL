@@ -26,6 +26,7 @@ public class tablaSimbolos{
 			 Iterator it = t.values().iterator();
 			 while(it.hasNext()){
 				 simboloLista s = (simboloLista)it.next();
+				 //Símbolos normales
 				 if(s.tipo.equalsIgnoreCase("Entero") && s.dimension1 == null) 
 					 System.out.println(s.tipo + " " + s.id + " := "+ s.valorD);
 				 if(s.tipo.equalsIgnoreCase("Real") && s.dimension1 == null) 
@@ -34,34 +35,56 @@ public class tablaSimbolos{
 					 System.out.println(s.tipo + " " + s.id + " := "+ s.valorB);
 				 if(s.tipo.equalsIgnoreCase("Caracter") && s.dimension1 == null) 
 					 System.out.println(s.tipo + " " + s.id + " := "+ s.valorC);	
+				 //Vectores dos dimensiones
 				 if(s.dimension1 != null && s.dimension2 != null) {
-					 if(s.tipo.equalsIgnoreCase("Entero")) 
-							 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + s.dimension1 + "]" + "[" + s.dimension2 + "] := "+ s.valorD);
-					 if(s.tipo.equalsIgnoreCase("Real")) 
-						 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + s.dimension1 + "]" + "[" + s.dimension2 + "] := "+ s.valorD);
-					 if(s.tipo.equalsIgnoreCase("Booleano")) 
-						 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + s.dimension1 + "]" + "[" + s.dimension2 + "] := "+ s.valorB);
-					 if(s.tipo.equalsIgnoreCase("Caracter")) 
-						 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + s.dimension1 + "]" + "[" + s.dimension2 + "] := "+ s.valorC);
+					 if(s.tipo.equalsIgnoreCase("Entero")) {
+						 for (int i = 0; i < s.dimension1; i++){
+							 for (int j = 0; j < s.dimension2; j++){
+								 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "]" + "[" + j + "] := "+ s.valorDVector2[i][j]);
+							 }
+						 }
+					 }
+					 if(s.tipo.equalsIgnoreCase("Real")) { 
+						 for (int i = 0; i < s.dimension1; i++){
+							 for (int j = 0; j < s.dimension2; j++){
+								 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "]" + "[" + j + "] := "+ s.valorDVector2[i][j]);
+							 }
+						 }
+					 }
+					 if(s.tipo.equalsIgnoreCase("Booleano")) { 
+						 for (int i = 0; i < s.dimension1; i++){
+							 for (int j = 0; j < s.dimension2; j++){
+								 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "]" + "[" + j + "] := "+ s.valorBVector2[i][j]);
+							 }
+						 }
+					 }
+					 if(s.tipo.equalsIgnoreCase("Caracter")) { 
+						 for (int i = 0; i < s.dimension1; i++){
+							 for (int j = 0; j < s.dimension2; j++){
+								 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "]" + "[" + j + "] := "+ s.valorCVector2[i][j]);
+							 }
+						 }
+					 }
 				 }
+				//Vectores una dimension
 				 if(s.dimension1 != null && s.dimension2 == null) {
 					 if(s.tipo.equalsIgnoreCase("Entero")) {
-						 for (int i = 0; i < s.valorDVector.length; i++){
+						 for (int i = 0; i < s.dimension1; i++){
 							 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "] := "+ s.valorDVector[i]);
 						 }
 					 }
 					 if(s.tipo.equalsIgnoreCase("Real")) { 
-						 for (int i = 0; i < s.valorDVector.length; i++){
+						 for (int i = 0; i < s.dimension1; i++){
 							 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "] := "+ s.valorDVector[i]);
 						 }
 					 }
 					 if(s.tipo.equalsIgnoreCase("Booleano")) { 
-						 for (int i = 0; i < s.valorBVector.length; i++){
+						 for (int i = 0; i < s.dimension1; i++){
 							 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "] := "+ s.valorBVector[i]);
 						 }
 				 	 }
 					 if(s.tipo.equalsIgnoreCase("Caracter")) { 
-						 for (int i = 0; i < s.valorCVector.length; i++){
+						 for (int i = 0; i < s.dimension1; i++){
 							 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "] := "+ s.valorCVector[i]);
 						 }
 					 }
