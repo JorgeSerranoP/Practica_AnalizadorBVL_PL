@@ -10,12 +10,14 @@ import cup.example.Lexer;
 import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.Scanner; 
+import java.util.Scanner;
+import java.util.ArrayList;  
 
 parser code {:
   protected Lexer lexer;
   public tablaSimbolos tabla = new tablaSimbolos();
   String id = "";
+  ArrayList listID = new ArrayList();
 :};
 
 action code {:
@@ -67,7 +69,7 @@ expr_list 		::= expr_list exprNum:e SEMI        					{: System.out.println(e); :
             	| exprBool:e SEMI               	    				{: System.out.println(e); :}
             	| expr_list exprChar:e SEMI     	    				{: System.out.println(e); :}
            		| exprChar:e SEMI               	    				{: System.out.println(e); :}
-            	| expr_list varDecl SEMI         						{:   :}
+            	| expr_list varDecl SEMI         						{:  :}
             	| varDecl SEMI                   						{:  :}
             	| expr_list sent_flujo          						{:  :}
             	| sent_flujo  											{:  :}   
@@ -93,9 +95,12 @@ exprNum         ::= exprNum:e PLUS exprNum:e1          					{: RESULT = e+e1;   
 varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{: tabla.insertar(t,i,e,null,null); 	:}
 				| tipo:t IDENTIFIER:i ASIGNATION exprBool:e     		{: tabla.insertar(t,i,null,e,null); 	:}
 				| tipo:t IDENTIFIER:i ASIGNATION exprChar:e     		{: tabla.insertar(t,i,null,null,e);  	:}
-				| tipo:t  IDENTIFIER:i									{: tabla.insertar(t,i,null,null,null); 	:}
-				| tipo:t  IDENTIFIER:i COMA doubleDecl:d				{: tabla.insertar(t,i,null,null,null); tabla.insertar(t,d,null,null,null); 
-																  		tabla.insertar(t,id,null,null,null);  :}				
+				| tipo:t  IDENTIFIER:i doubleDecl:d						{: listID.add(i);
+																			for(int j = 0; j < listID.size(); j++){
+																				 tabla.insertar(t,listID.get(j).toString(),null,null,null);
+																			}
+																			listID.clear();			  
+																  		:}				
 				| IDENTIFIER:i ASIGNATION exprNum:e						{: simboloLista s = tabla.buscar(i);
 															  			tabla.insertar(s.tipo,i,e,null,null); 	:}
 				| IDENTIFIER:i ASIGNATION ENTRADA						{: Scanner leer=new Scanner(System.in); 
@@ -120,8 +125,8 @@ varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{: tabla.inserta
 exprVector      ::= LBRACKET:b NUMBER:n RBRACKET:b1 					{: RESULT = n.intValue();  			:}
 				;
 				
-doubleDecl      ::= IDENTIFIER:i 										{: RESULT = i; 						:}
-				| IDENTIFIER:i COMA doubleDecl:d						{: RESULT = i; id = d; 				:}
+doubleDecl      ::= COMA IDENTIFIER:i doubleDecl:d						{: listID.add(i);			:}
+				| 														{: 			:}
 				;
          		 	 	 
 exprBool        ::= exprNum:e LESSTHAN exprNum:e1          				{: if ( e < e1) RESULT = true; 										
