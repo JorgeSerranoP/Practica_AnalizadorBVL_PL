@@ -18,6 +18,7 @@ parser code {:
   public tablaSimbolos tabla = new tablaSimbolos();
   String id = "";
   ArrayList listID = new ArrayList();
+  ArrayList listIDFlujo = new ArrayList();
 :};
 
 action code {:
@@ -47,10 +48,10 @@ terminal Character CHAR;
 terminal String IDENTIFIER, ENTERO, REAL, BOOLEANO, CARACTER;
 
 /* Non terminals */
-non terminal  sentencia, varDecl, sent_flujo, asignacion, condicional, bucle, expr_list;
+non terminal  sentencia, sent_flujo, asignacion, condicional, bucle, expr_list, expr_listFlujo;
 non terminal Double exprNum;      // used to store evaluated subexpressions
 non terminal Boolean exprBool;
-non terminal String tipo, decl_variable, doubleDecl, doubleDeclExtra;
+non terminal String tipo, decl_variable, doubleDecl, doubleDeclExtra, varDecl, varDeclFlujo, doubleDeclFlujo;
 non terminal Integer exprVector;
 non terminal Character exprChar;
 
@@ -69,8 +70,8 @@ expr_list 		::= expr_list exprNum:e SEMI        					{: System.out.println(e); :
             	| exprBool:e SEMI               	    				{: System.out.println(e); :}
             	| expr_list exprChar:e SEMI     	    				{: System.out.println(e); :}
            		| exprChar:e SEMI               	    				{: System.out.println(e); :}
-            	| expr_list varDecl SEMI         						{:  :}
-            	| varDecl SEMI                   						{:  :}
+            	| expr_list varDecl:i SEMI         						{:  :}
+            	| varDecl:i SEMI                   						{:  :}
             	| expr_list sent_flujo          						{:  :}
             	| sent_flujo  											{:  :}   
             	;
@@ -92,9 +93,10 @@ exprNum         ::= exprNum:e PLUS exprNum:e1          					{: RESULT = e+e1;   
 				| IDENTIFIER:i											{: simboloLista s = tabla.buscar(i); RESULT = s.valorD; :}
 				;
 
-varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{: tabla.insertar(t,i,e,null,null); 	:}
-				| tipo:t IDENTIFIER:i ASIGNATION exprBool:e     		{: tabla.insertar(t,i,null,e,null); 	:}
-				| tipo:t IDENTIFIER:i ASIGNATION exprChar:e     		{: tabla.insertar(t,i,null,null,e);  	:}
+varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{: tabla.insertar(t,i,e,null,null);  	:}
+				| tipo:t IDENTIFIER:i ASIGNATION exprBool:e     		{: tabla.insertar(t,i,null,e,null);  	:}
+				| tipo:t IDENTIFIER:i ASIGNATION exprChar:e     		{: tabla.insertar(t,i,null,null,e);   	:}
+				| tipo:t IDENTIFIER:i ASIGNATION ENTRADA     		    {: tabla.insertar(t,i,null,null,null);   	:}
 				| tipo:t  IDENTIFIER:i doubleDecl:d						{: listID.add(i);
 																			for(int j = 0; j < listID.size(); j++){
 																				 tabla.insertar(t,listID.get(j).toString(),null,null,null);
@@ -102,22 +104,19 @@ varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{: tabla.inserta
 																			listID.clear();			  
 																  		:}				
 				| IDENTIFIER:i ASIGNATION exprNum:e						{: simboloLista s = tabla.buscar(i);
-															  			tabla.insertar(s.tipo,i,e,null,null); 	:}
-				| IDENTIFIER:i ASIGNATION ENTRADA						{: Scanner leer=new Scanner(System.in); 
-															  			System.out.println( "Introduzca la entrada: ");
-															  			String input=leer.nextLine(); 
-															  			simboloLista s = tabla.buscar(i);
-															  			tabla.insertar(s.tipo,i,Double.parseDouble(input),null,null); 	:}
+															  			tabla.insertar(s.tipo,i,e,null,null);   	:}
+				| IDENTIFIER:i ASIGNATION ENTRADA						{: simboloLista s = tabla.buscar(i); s.isChanged = true;
+															  			tabla.put(i, s);  	:}
 				| IDENTIFIER:i ASIGNATION exprBool:e					{: simboloLista s = tabla.buscar(i);
-															  			tabla.insertar(s.tipo,i,null,e,null); 	:}
+															  			tabla.insertar(s.tipo,i,null,e,null);  	:}
 				| IDENTIFIER:i ASIGNATION exprChar:e					{: simboloLista s = tabla.buscar(i);
-															  			tabla.insertar(s.tipo,i,null,null,e); 	:}
-				| VECTOR tipo:t IDENTIFIER:i exprVector:e  													{: tabla.insertarVector(t,i,null,null,null,e,null);	:}
-				| VECTOR tipo:t IDENTIFIER:i exprVector:e exprVector:e1 									{: tabla.insertarVector(t,i,null,null,null,e,e1); 	:}				
-				| IDENTIFIER:i exprVector:e ASIGNATION exprNum:e1  											{: simboloLista s = tabla.buscar(i); s.valorDVector[e] = e1;  tabla.put(i, s);	:}
-				| IDENTIFIER:i exprVector:e ASIGNATION exprBool:e1  										{: simboloLista s = tabla.buscar(i); s.valorBVector[e] = e1;  tabla.put(i, s); 	:}
-				| IDENTIFIER:i exprVector:e ASIGNATION exprChar:e1 											{: simboloLista s = tabla.buscar(i); s.valorCVector[e] = e1;  tabla.put(i, s); 	:}
-				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprNum:e2  							{: simboloLista s = tabla.buscar(i); s.valorDVector2[e][e1] = e2;  tabla.put(i, s);	:}
+															  			tabla.insertar(s.tipo,i,null,null,e);  	:}
+				| VECTOR tipo:t IDENTIFIER:i exprVector:e  													{: tabla.insertarVector(t,i,null,null,null,e,null);	 :}
+				| VECTOR tipo:t IDENTIFIER:i exprVector:e exprVector:e1 									{: tabla.insertarVector(t,i,null,null,null,e,e1);  	:}				
+				| IDENTIFIER:i exprVector:e ASIGNATION exprNum:e1  											{: simboloLista s = tabla.buscar(i); s.valorDVector[e] = e1;  tabla.put(i, s);  	:}
+				| IDENTIFIER:i exprVector:e ASIGNATION exprBool:e1  										{: simboloLista s = tabla.buscar(i); s.valorBVector[e] = e1;  tabla.put(i, s);  	:}
+				| IDENTIFIER:i exprVector:e ASIGNATION exprChar:e1 											{: simboloLista s = tabla.buscar(i); s.valorCVector[e] = e1;  tabla.put(i, s);  	:}
+				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprNum:e2  							{: simboloLista s = tabla.buscar(i); s.valorDVector2[e][e1] = e2;  tabla.put(i, s); :}
 				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprBool:e2  						    {: simboloLista s = tabla.buscar(i); s.valorBVector2[e][e1] = e2;  tabla.put(i, s); :}
 				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprChar:e2 							{: simboloLista s = tabla.buscar(i); s.valorCVector2[e][e1] = e2;  tabla.put(i, s); :}								
           		;
@@ -152,10 +151,60 @@ sent_flujo      ::= condicional											{:  :}
 				|bucle													{:  :}
 			    ;
 			    
-condicional     ::= SI exprBool:e ENTONCES expr_list:e1 FINSI 												{: if(e) RESULT = e1; 			:}
-				| SI exprBool:e ENTONCES expr_list:e1 SINO expr_list:e2 FINSI 								{: if(e) RESULT = e1;
-																				   							else RESULT = e2; 				:}
+condicional     ::= SI exprBool:e ENTONCES expr_listFlujo:i FINSI 												{:  for(int j = 0; j < listIDFlujo.size(); j++){
+																				 										simboloLista s = tabla.buscar(listIDFlujo.get(j).toString()); s.isChanged = true;  tabla.put(listIDFlujo.get(j).toString(), s);
+																												}
+																												listIDFlujo.clear();	  :}
+				| SI exprBool:e ENTONCES expr_listFlujo:i1 SINO expr_listFlujo:i2 FINSI 						{:  for(int j = 0; j < listIDFlujo.size(); j++){
+																				 										simboloLista s = tabla.buscar(listIDFlujo.get(j).toString()); s.isChanged = true;  tabla.put(listIDFlujo.get(j).toString(), s);
+																												}
+																												listIDFlujo.clear();	  :}				
 			    ;
 			  
-bucle		    ::= MIENTRAS exprBool:e expr_list:e1 FINMIENTRAS 											{: while(e) RESULT = e1;  		:}
+bucle		    ::= MIENTRAS exprBool:e expr_listFlujo:e1 FINMIENTRAS 											{:  for(int j = 0; j < listIDFlujo.size(); j++){
+																				 										simboloLista s = tabla.buscar(listIDFlujo.get(j).toString()); s.isChanged = true;  tabla.put(listIDFlujo.get(j).toString(), s);
+																												}
+																												listIDFlujo.clear();	  :}
+				;
+				
+expr_listFlujo  ::= expr_listFlujo exprNum:e SEMI        				{: System.out.println(e); :}
+            	| exprNum:e SEMI                	    				{: System.out.println(e); :}
+            	| expr_listFlujo exprBool:e SEMI      						{: System.out.println(e); :}
+            	| exprBool:e SEMI               	    				{: System.out.println(e); :}
+            	| expr_listFlujo exprChar:e SEMI     	    				{: System.out.println(e); :}
+           		| exprChar:e SEMI               	    				{: System.out.println(e); :}
+            	| expr_listFlujo varDeclFlujo:i SEMI         				{:  :}
+            	| varDeclFlujo:i SEMI                   				{:  :}
+            	| expr_listFlujo sent_flujo          						{:  :}
+            	| sent_flujo  											{:  :}   
+				;
+varDeclFlujo	::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{: tabla.insertar(t,i,e,null,null); listIDFlujo.add(i); 	:}
+				| tipo:t IDENTIFIER:i ASIGNATION exprBool:e     		{: tabla.insertar(t,i,null,e,null); listIDFlujo.add(i); 	:}
+				| tipo:t IDENTIFIER:i ASIGNATION exprChar:e     		{: tabla.insertar(t,i,null,null,e); listIDFlujo.add(i);  	:}
+				| tipo:t IDENTIFIER:i ASIGNATION ENTRADA     		    {: tabla.insertar(t,i,null,null,null); listIDFlujo.add(i);  :}
+				| tipo:t  IDENTIFIER:i doubleDecl:d						{: listID.add(i);
+																			for(int j = 0; j < listID.size(); j++){
+																				 tabla.insertar(t,listID.get(j).toString(),null,null,null);
+																			}
+																			listID.clear();			  
+																  		:}				
+				| IDENTIFIER:i ASIGNATION exprNum:e						{: simboloLista s = tabla.buscar(i);
+															  			tabla.insertar(s.tipo,i,e,null,null); listIDFlujo.add(i);  	:}
+				| IDENTIFIER:i ASIGNATION ENTRADA						{: simboloLista s = tabla.buscar(i); s.isChanged = true;
+															  			tabla.put(i, s);  	:}
+				| IDENTIFIER:i ASIGNATION exprBool:e					{: simboloLista s = tabla.buscar(i);
+															  			tabla.insertar(s.tipo,i,null,e,null); listIDFlujo.add(i); 	:}
+				| IDENTIFIER:i ASIGNATION exprChar:e					{: simboloLista s = tabla.buscar(i);
+															  			tabla.insertar(s.tipo,i,null,null,e); listIDFlujo.add(i); 	:}
+				| VECTOR tipo:t IDENTIFIER:i exprVector:e  													{: tabla.insertarVector(t,i,null,null,null,e,null);	listIDFlujo.add(i); :}
+				| VECTOR tipo:t IDENTIFIER:i exprVector:e exprVector:e1 									{: tabla.insertarVector(t,i,null,null,null,e,e1); listIDFlujo.add(i); 	:}				
+				| IDENTIFIER:i exprVector:e ASIGNATION exprNum:e1  											{: simboloLista s = tabla.buscar(i); s.valorDVector[e] = e1;  tabla.put(i, s); listIDFlujo.add(i); 	:}
+				| IDENTIFIER:i exprVector:e ASIGNATION exprBool:e1  										{: simboloLista s = tabla.buscar(i); s.valorBVector[e] = e1;  tabla.put(i, s); listIDFlujo.add(i); 	:}
+				| IDENTIFIER:i exprVector:e ASIGNATION exprChar:e1 											{: simboloLista s = tabla.buscar(i); s.valorCVector[e] = e1;  tabla.put(i, s); listIDFlujo.add(i); 	:}
+				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprNum:e2  							{: simboloLista s = tabla.buscar(i); s.valorDVector2[e][e1] = e2;  tabla.put(i, s); listIDFlujo.add(i); 	:}
+				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprBool:e2  						    {: simboloLista s = tabla.buscar(i); s.valorBVector2[e][e1] = e2;  tabla.put(i, s); listIDFlujo.add(i);  :}
+				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprChar:e2 							{: simboloLista s = tabla.buscar(i); s.valorCVector2[e][e1] = e2;  tabla.put(i, s); listIDFlujo.add(i); :}								
+          		;
+doubleDeclFlujo ::= COMA IDENTIFIER:i doubleDeclFlujo:d						{: listID.add(i);	listIDFlujo.add(i);		:}
+				| 															{: 			:}
 				;			  			  			 	 	 	 	     	

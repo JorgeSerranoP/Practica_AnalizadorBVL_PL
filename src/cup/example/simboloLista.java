@@ -14,6 +14,7 @@ public class simboloLista {
 	Character valorCVector2[][];
 	Integer dimension1;
 	Integer dimension2;
+	Boolean isChanged;
 	
 	public simboloLista(String tipo, String id, Double valorD, Boolean valorB, Character valorC){
 		this.tipo = tipo;

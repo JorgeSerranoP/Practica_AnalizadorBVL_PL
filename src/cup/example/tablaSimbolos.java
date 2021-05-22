@@ -28,11 +28,11 @@ public class tablaSimbolos{
 				 simboloLista s = (simboloLista)it.next();
 				 //Símbolos normales
 				 if(s.tipo.equalsIgnoreCase("Entero") && s.dimension1 == null) 
-					 System.out.println(s.tipo + " " + s.id + " := "+ s.valorD);
+					 System.out.println(s.tipo + " " + s.id + " := "+ s.valorD+ s.isChanged);
 				 if(s.tipo.equalsIgnoreCase("Real") && s.dimension1 == null) 
-					 System.out.println(s.tipo + " " + s.id + " := "+ s.valorD);
+					 System.out.println(s.tipo + " " + s.id + " := "+ s.valorD+ s.isChanged );
 				 if(s.tipo.equalsIgnoreCase("Booleano") && s.dimension1 == null) 
-					 System.out.println(s.tipo + " " + s.id + " := "+ s.valorB);
+					 System.out.println(s.tipo + " " + s.id + " := "+ s.valorB + s.isChanged);
 				 if(s.tipo.equalsIgnoreCase("Caracter") && s.dimension1 == null) 
 					 System.out.println(s.tipo + " " + s.id + " := "+ s.valorC);	
 				 //Vectores dos dimensiones
