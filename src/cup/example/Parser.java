@@ -696,7 +696,11 @@ class CUP$Parser$actions {
 		Location e1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Double e1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG18
- RESULT = e+e1;        	
+ 
+																			if ( e == null || e1 == null ) {
+																				parser.report_error( "No se puede realizar la suma porque hay una variable no asignada ", new Symbol( sym.IDENTIFIER, e ) );
+																			}else  RESULT = e+e1;
+																		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("exprNum",7, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -712,7 +716,11 @@ class CUP$Parser$actions {
 		Location e1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Double e1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG19
- RESULT = e-e1;  			
+ 
+																			if ( e == null || e1 == null ) {
+																				parser.report_error( "No se puede realizar la resta porque hay una variable no asignada ", new Symbol( sym.IDENTIFIER, e ) );
+																			}else  RESULT = e-e1;
+																		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("exprNum",7, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -728,7 +736,11 @@ class CUP$Parser$actions {
 		Location e1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Double e1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG20
- RESULT = e*e1;  			
+ 
+																			if ( e == null || e1 == null ) {
+																				parser.report_error( "No se puede realizar la multiplicación porque hay una variable no asignada ", new Symbol( sym.IDENTIFIER, e ) );
+																			}else  RESULT = e*e1;
+																		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("exprNum",7, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -744,7 +756,11 @@ class CUP$Parser$actions {
 		Location e1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Double e1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG21
- RESULT = e/e1;  			
+ 
+																			if ( e == null || e1 == null ) {
+																				parser.report_error( "No se puede realizar la división porque hay una variable no asignada ", new Symbol( sym.IDENTIFIER, e ) );
+																			}else  RESULT = e/e1;
+																		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("exprNum",7, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -809,7 +825,12 @@ class CUP$Parser$actions {
 		Location ixright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		String i = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG26
- simboloLista s = tabla.buscar(i); RESULT = s.valorD; 
+ 
+																			simboloLista s = tabla.buscar(i);
+																			if ( s == null ) {
+																				parser.report_error( "No hay un valor asignado a la variable " + i, new Symbol( sym.IDENTIFIER, i ) );
+																			}else  RESULT = s.valorD;
+																		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("exprNum",7, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -828,7 +849,11 @@ class CUP$Parser$actions {
 		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Double e = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG27
- tabla.insertar(t,i,e,null,null);  	
+ 
+																			if ( t != "ENTERO" ) {
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t, new Symbol( sym.IDENTIFIER, i ) );
+																			}else tabla.insertar(t,i,e,null,null);	
+																		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDecl",13, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -847,7 +872,11 @@ class CUP$Parser$actions {
 		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Boolean e = (Boolean)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG28
- tabla.insertar(t,i,null,e,null);  	
+ 
+																			if ( t != "BOOLEANO" ) {
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t, new Symbol( sym.IDENTIFIER, i ) );
+																			}else tabla.insertar(t,i,null,e,null);  	
+																		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDecl",13, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -866,7 +895,11 @@ class CUP$Parser$actions {
 		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Character e = (Character)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG29
- tabla.insertar(t,i,null,null,e);   	
+ 
+																			if ( t != "CARACTER" ) {
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t, new Symbol( sym.IDENTIFIER, i ) );
+																			}else tabla.insertar(t,i,null,null,e);  	
+																		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDecl",13, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -922,8 +955,12 @@ class CUP$Parser$actions {
 		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Double e = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG32
- simboloLista s = tabla.buscar(i);
-															  			tabla.insertar(s.tipo,i,e,null,null);   	
+ 
+																			simboloLista s = tabla.buscar(i);
+																			if ( s.tipo != "ENTERO" ) {
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo, new Symbol( sym.IDENTIFIER, i ) );
+																			}else tabla.insertar(s.tipo,i,e,null,null);	
+																		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDecl",13, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -953,8 +990,12 @@ class CUP$Parser$actions {
 		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Boolean e = (Boolean)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG34
- simboloLista s = tabla.buscar(i);
-															  			tabla.insertar(s.tipo,i,null,e,null);  	
+ 
+																			simboloLista s = tabla.buscar(i);
+																			if ( s.tipo != "BOOLEANO" ) {
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo, new Symbol( sym.IDENTIFIER, i ) );
+																			}else tabla.insertar(s.tipo,i,null,e,null);	
+																		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDecl",13, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -970,8 +1011,12 @@ class CUP$Parser$actions {
 		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Character e = (Character)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG35
- simboloLista s = tabla.buscar(i);
-															  			tabla.insertar(s.tipo,i,null,null,e);  	
+ 
+																			simboloLista s = tabla.buscar(i);
+																			if ( s.tipo != "CARACTER" ) {
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo, new Symbol( sym.IDENTIFIER, i ) );
+																			}else tabla.insertar(s.tipo,i,null,null,e);	
+																		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDecl",13, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

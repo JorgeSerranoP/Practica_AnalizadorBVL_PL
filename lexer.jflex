@@ -45,17 +45,6 @@ import java.util.*;
 						new Location(yyline+1,yycolumn+yylength(), yychar+yylength()), lexem);
     }
     
-    public String arrayPos(String symbol){
-	    char [] cadenaChar = symbol.toCharArray();
-	    String num = "";
-	    for (int i = 0; i < cadenaChar.length; i++){
-	    	if(Character.isDigit(cadenaChar[i])){
-	    		num+=cadenaChar[i];
-	    	}
-    	}
-    	return num;
-    }
-    
     protected void emit_warning(String message){
     	System.out.println("scanner warning: " + message + " at : 2 "+ 
     			(yyline+1) + " " + (yycolumn+1) + " " + yychar);
@@ -73,7 +62,6 @@ Whitespace = [ \t\f] | {Newline}
 Number     = [0-9]+
 RealNumber = [0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 HexNumber  = "0X"[0-9A-F]+|"0x"[0-9A-F]+
-ArrayMEM   = "MEM["[0-9][0-9]*"]"
 Character = '(.{1})'
 Identifier = [a-zA-Z_][a-zA-Z0-9_]*
 
@@ -115,13 +103,13 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
   ">"          { return symbolFactory.newSymbol("MORETHAN", MORETHAN); }
   "=="         { return symbolFactory.newSymbol("ISEQUAL", ISEQUAL); }  
   "&"          { return symbolFactory.newSymbol("AND", AND); }  
+  "And"        { return symbolFactory.newSymbol("AND", AND); }
   "|"          { return symbolFactory.newSymbol("OR", OR); }
+   "Or"         { return symbolFactory.newSymbol("OR", OR); }
   "¬"          { return symbolFactory.newSymbol("NOT", NOT); }
+  "Not"        { return symbolFactory.newSymbol("NOT", NOT); }
   "True"       { return symbolFactory.newSymbol("TRUE", TRUE); }
   "False"      { return symbolFactory.newSymbol("FALSE", FALSE); }
-  "And"        { return symbolFactory.newSymbol("AND", AND); }
-  "Or"         { return symbolFactory.newSymbol("OR", OR); }
-  "Not"        { return symbolFactory.newSymbol("NOT", NOT); }
   "Entero"     { return symbolFactory.newSymbol("ENTERO", ENTERO); }
   "Real"       { return symbolFactory.newSymbol("REAL", REAL); }
   "Finmientras" { return symbolFactory.newSymbol("FINMIENTRAS", FINMIENTRAS); }

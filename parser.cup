@@ -61,6 +61,7 @@ precedence nonassoc MORETHAN, LESSTHAN, ISEQUAL;
 precedence left PLUS, MINUS;  
 precedence left TIMES, DIVISION;
 precedence left UMINUS;
+
 start with expr_list;
 
 /* The grammar rules */			
@@ -82,35 +83,80 @@ tipo      		::= ENTERO 												{: RESULT =  "ENTERO";		:}
 				| CARACTER  											{: RESULT =  "CARACTER"; 	:}			
 				;	
 				
-exprNum         ::= exprNum:e PLUS exprNum:e1          					{: RESULT = e+e1;        	:}
-	            | exprNum:e MINUS exprNum: e1          					{: RESULT = e-e1;  			:}
-	            | exprNum:e TIMES exprNum: e1          					{: RESULT = e*e1;  			:} 
-	            | exprNum:e DIVISION exprNum: e1          				{: RESULT = e/e1;  			:}
+exprNum         ::= exprNum:e PLUS exprNum:e1          					{: 
+																			if ( e == null || e1 == null ) {
+																				parser.report_error( "No se puede realizar la suma porque hay una variable no asignada ", new Symbol( sym.IDENTIFIER, e ) );
+																			}else  RESULT = e+e1;
+																		:}
+	            | exprNum:e MINUS exprNum: e1          					{: 
+																			if ( e == null || e1 == null ) {
+																				parser.report_error( "No se puede realizar la resta porque hay una variable no asignada ", new Symbol( sym.IDENTIFIER, e ) );
+																			}else  RESULT = e-e1;
+																		:}
+	            | exprNum:e TIMES exprNum: e1          					{: 
+																			if ( e == null || e1 == null ) {
+																				parser.report_error( "No se puede realizar la multiplicación porque hay una variable no asignada ", new Symbol( sym.IDENTIFIER, e ) );
+																			}else  RESULT = e*e1;
+																		:}
+	            | exprNum:e DIVISION exprNum: e1          				{: 
+																			if ( e == null || e1 == null ) {
+																				parser.report_error( "No se puede realizar la división porque hay una variable no asignada ", new Symbol( sym.IDENTIFIER, e ) );
+																			}else  RESULT = e/e1;
+																		:}
 	            | MINUS exprNum:e                 						{: RESULT = -e;             :}
 	            | PLUS exprNum:e                 						{: RESULT = +e;             :}	       
 	            | LPAREN exprNum:e RPAREN          						{: RESULT = e;              :}
 				| NUMBER: n				   								{: RESULT = n;              :}
-				| IDENTIFIER:i											{: simboloLista s = tabla.buscar(i); RESULT = s.valorD; :}
+				| IDENTIFIER:i											{: 
+																			simboloLista s = tabla.buscar(i);
+																			if ( s == null ) {
+																				parser.report_error( "No hay un valor asignado a la variable " + i, new Symbol( sym.IDENTIFIER, i ) );
+																			}else  RESULT = s.valorD;
+																		:}
 				;
 
-varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{: tabla.insertar(t,i,e,null,null);  	:}
-				| tipo:t IDENTIFIER:i ASIGNATION exprBool:e     		{: tabla.insertar(t,i,null,e,null);  	:}
-				| tipo:t IDENTIFIER:i ASIGNATION exprChar:e     		{: tabla.insertar(t,i,null,null,e);   	:}
+varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{: 
+																			if ( t != "ENTERO" ) {
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t, new Symbol( sym.IDENTIFIER, i ) );
+																			}else tabla.insertar(t,i,e,null,null);	
+																		:}
+				| tipo:t IDENTIFIER:i ASIGNATION exprBool:e     		{: 
+																			if ( t != "BOOLEANO" ) {
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t, new Symbol( sym.IDENTIFIER, i ) );
+																			}else tabla.insertar(t,i,null,e,null);  	
+																		:}
+				| tipo:t IDENTIFIER:i ASIGNATION exprChar:e     		{: 
+																			if ( t != "CARACTER" ) {
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t, new Symbol( sym.IDENTIFIER, i ) );
+																			}else tabla.insertar(t,i,null,null,e);  	
+																		:}
 				| tipo:t IDENTIFIER:i ASIGNATION ENTRADA     		    {: tabla.insertar(t,i,null,null,null);   	:}
-				| tipo:t  IDENTIFIER:i doubleDecl:d						{: listID.add(i);
+				| tipo:t IDENTIFIER:i doubleDecl:d						{: listID.add(i);
 																			for(int j = 0; j < listID.size(); j++){
 																				 tabla.insertar(t,listID.get(j).toString(),null,null,null);
 																			}
 																			listID.clear();			  
 																  		:}				
-				| IDENTIFIER:i ASIGNATION exprNum:e						{: simboloLista s = tabla.buscar(i);
-															  			tabla.insertar(s.tipo,i,e,null,null);   	:}
+				| IDENTIFIER:i ASIGNATION exprNum:e						{: 
+																			simboloLista s = tabla.buscar(i);
+																			if ( s.tipo != "ENTERO" ) {
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo, new Symbol( sym.IDENTIFIER, i ) );
+																			}else tabla.insertar(s.tipo,i,e,null,null);	
+																		:}
 				| IDENTIFIER:i ASIGNATION ENTRADA						{: simboloLista s = tabla.buscar(i); s.isChanged = true;
 															  			tabla.put(i, s);  	:}
-				| IDENTIFIER:i ASIGNATION exprBool:e					{: simboloLista s = tabla.buscar(i);
-															  			tabla.insertar(s.tipo,i,null,e,null);  	:}
-				| IDENTIFIER:i ASIGNATION exprChar:e					{: simboloLista s = tabla.buscar(i);
-															  			tabla.insertar(s.tipo,i,null,null,e);  	:}
+				| IDENTIFIER:i ASIGNATION exprBool:e					{: 
+																			simboloLista s = tabla.buscar(i);
+																			if ( s.tipo != "BOOLEANO" ) {
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo, new Symbol( sym.IDENTIFIER, i ) );
+																			}else tabla.insertar(s.tipo,i,null,e,null);	
+																		:}
+				| IDENTIFIER:i ASIGNATION exprChar:e					{: 
+																			simboloLista s = tabla.buscar(i);
+																			if ( s.tipo != "CARACTER" ) {
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo, new Symbol( sym.IDENTIFIER, i ) );
+																			}else tabla.insertar(s.tipo,i,null,null,e);	
+																		:}
 				| VECTOR tipo:t IDENTIFIER:i exprVector:e  													{: tabla.insertarVector(t,i,null,null,null,e,null);	 :}
 				| VECTOR tipo:t IDENTIFIER:i exprVector:e exprVector:e1 									{: tabla.insertarVector(t,i,null,null,null,e,e1);  	:}				
 				| IDENTIFIER:i exprVector:e ASIGNATION exprNum:e1  											{: simboloLista s = tabla.buscar(i); s.valorDVector[e] = e1;  tabla.put(i, s);  	:}
@@ -130,17 +176,17 @@ doubleDecl      ::= COMA IDENTIFIER:i doubleDecl:d						{: listID.add(i);			:}
          		 	 	 
 exprBool        ::= exprNum:e LESSTHAN exprNum:e1          				{: if ( e < e1) RESULT = true; 										
 																		else RESULT = false;		 	  	:} 
-	            |exprNum:e MORETHAN exprNum:e1          				{: if ( e > e1) RESULT = true; 										
+	            | exprNum:e MORETHAN exprNum:e1          				{: if ( e > e1) RESULT = true; 										
 																		else RESULT = false;		 	  	:} 
-	            |exprNum:e ISEQUAL exprNum:e1         					{: if ( e == e1) RESULT = true; 										
+	            | exprNum:e ISEQUAL exprNum:e1         					{: if ( e == e1) RESULT = true; 										
 																		else RESULT = false;		 	 	:}
-				|TRUE													{: RESULT = true;  					:}
-				|FALSE													{: RESULT = false; 					:}
-				|exprBool:e AND exprBool:e1								{: if (e && e1) RESULT = true;
+				| TRUE													{: RESULT = true;  					:}
+				| FALSE													{: RESULT = false; 					:}
+				| exprBool:e AND exprBool:e1								{: if (e && e1) RESULT = true;
 																		else RESULT = false; 				:}
-			    |exprBool:e OR exprBool:e1								{: if (e || e1) RESULT = true;
+			    | exprBool:e OR exprBool:e1								{: if (e || e1) RESULT = true;
 																		else RESULT = false; 				:}
-				|NOT exprBool:e1										{: if (e1) RESULT = false;
+				| NOT exprBool:e1										{: if (e1) RESULT = false;
 																		else RESULT = true; 				:}
 				;
 				
@@ -148,7 +194,7 @@ exprChar        ::= CHAR:c												{: RESULT = c;                      :}
 				;
 				
 sent_flujo      ::= condicional											{:  :}
-				|bucle													{:  :}
+				| bucle													{:  :}
 			    ;
 			    
 condicional     ::= SI exprBool:e ENTONCES expr_listFlujo:i FINSI 												{:  for(int j = 0; j < listIDFlujo.size(); j++){
@@ -178,6 +224,7 @@ expr_listFlujo  ::= expr_listFlujo exprNum:e SEMI        				{: System.out.print
             	| expr_listFlujo sent_flujo          						{:  :}
             	| sent_flujo  											{:  :}   
 				;
+				
 varDeclFlujo	::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{: tabla.insertar(t,i,e,null,null); listIDFlujo.add(i); 	:}
 				| tipo:t IDENTIFIER:i ASIGNATION exprBool:e     		{: tabla.insertar(t,i,null,e,null); listIDFlujo.add(i); 	:}
 				| tipo:t IDENTIFIER:i ASIGNATION exprChar:e     		{: tabla.insertar(t,i,null,null,e); listIDFlujo.add(i);  	:}
@@ -205,6 +252,7 @@ varDeclFlujo	::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{: tabla.inserta
 				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprBool:e2  						    {: simboloLista s = tabla.buscar(i); s.valorBVector2[e][e1] = e2;  tabla.put(i, s); listIDFlujo.add(i);  :}
 				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprChar:e2 							{: simboloLista s = tabla.buscar(i); s.valorCVector2[e][e1] = e2;  tabla.put(i, s); listIDFlujo.add(i); :}								
           		;
+          		
 doubleDeclFlujo ::= COMA IDENTIFIER:i doubleDeclFlujo:d						{: listID.add(i);	listIDFlujo.add(i);		:}
 				| 															{: 			:}
 				;			  			  			 	 	 	 	     	
