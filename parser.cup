@@ -75,6 +75,7 @@ expr_list 		::= expr_list exprNum:e SEMI        					{: System.out.println(e); :
             	| varDecl:i SEMI                   						{:  :}
             	| expr_list sent_flujo          						{:  :}
             	| sent_flujo  											{:  :}   
+            	| error													{:	:}
             	;
             	
 tipo      		::= ENTERO 												{: RESULT =  "ENTERO";		:}
@@ -113,7 +114,6 @@ exprNum         ::= exprNum:e PLUS exprNum:e1          					{:
 																				parser.report_error( "No hay un valor asignado a la variable " + i, new Symbol( sym.IDENTIFIER, i ) );
 																			}else  RESULT = s.valorD;
 																		:}
-				| error													{:							:}
 				;
 
 varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{: 
@@ -166,7 +166,6 @@ varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{:
 				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprNum:e2  							{: simboloLista s = tabla.buscar(i); s.valorDVector2[e][e1] = e2;  tabla.put(i, s); :}
 				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprBool:e2  						    {: simboloLista s = tabla.buscar(i); s.valorBVector2[e][e1] = e2;  tabla.put(i, s); :}
 				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprChar:e2 							{: simboloLista s = tabla.buscar(i); s.valorCVector2[e][e1] = e2;  tabla.put(i, s); :}								
-          		| error													{:							:}
           		;
           		
 exprVector      ::= LBRACKET:b NUMBER:n RBRACKET:b1 					{: RESULT = n.intValue();  			:}
@@ -190,11 +189,9 @@ exprBool        ::= exprNum:e LESSTHAN exprNum:e1          				{: if ( e < e1) R
 																		else RESULT = false; 				:}
 				| NOT exprBool:e1										{: if (e1) RESULT = false;
 																		else RESULT = true; 				:}
-				| error													{:							:}
 				;
 				
 exprChar        ::= CHAR:c												{: RESULT = c;                      :}
-				| error													{:							:}
 				;
 				
 sent_flujo      ::= condicional											{:  :}
@@ -255,7 +252,6 @@ varDeclFlujo	::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{: tabla.inserta
 				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprNum:e2  							{: simboloLista s = tabla.buscar(i); s.valorDVector2[e][e1] = e2;  tabla.put(i, s); listIDFlujo.add(i); 	:}
 				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprBool:e2  						    {: simboloLista s = tabla.buscar(i); s.valorBVector2[e][e1] = e2;  tabla.put(i, s); listIDFlujo.add(i);  :}
 				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprChar:e2 							{: simboloLista s = tabla.buscar(i); s.valorCVector2[e][e1] = e2;  tabla.put(i, s); listIDFlujo.add(i); :}								
-          		| error													{:							:}
           		;
           		
 doubleDeclFlujo ::= COMA IDENTIFIER:i doubleDeclFlujo:d						{: listID.add(i);	listIDFlujo.add(i);		:}
