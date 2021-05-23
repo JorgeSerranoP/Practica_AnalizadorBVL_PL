@@ -1215,6 +1215,8 @@ class CUP$Parser$actions {
 																													}
 																													else if(s.tipo != "ENTERO" && s.tipo != "REAL"){
 																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque este es de tipo " + s.tipo + ".\n", null );
+																													}else if(e >= s.dimension1){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque la posición está fuera de límites.\n", null );
 																													}else{
 																														s.valorDVector[e] = e1;  
 																														tabla.put(i, s);
@@ -1249,6 +1251,8 @@ class CUP$Parser$actions {
 																													}
 																													else if(s.tipo != "BOOLEANO"){
 																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque este es de tipo " + s.tipo + ".\n", null );
+																													}else if(e >= s.dimension1){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque la posición está fuera de límites.\n", null );
 																													}else{
 																														s.valorBVector[e] = e1;  
 																														tabla.put(i, s);
@@ -1283,6 +1287,8 @@ class CUP$Parser$actions {
 																													}
 																													else if(s.tipo != "CARACTER"){
 																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque este es de tipo " + s.tipo + ".\n", null );
+																													}else if(e >= s.dimension1){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque la posición está fuera de límites.\n", null );
 																													}else{
 																														s.valorCVector[e] = e1;  
 																														tabla.put(i, s);
@@ -1320,6 +1326,8 @@ class CUP$Parser$actions {
 																													}
 																													else if(s.tipo != "ENTERO" && s.tipo != "REAL"){
 																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque este es de tipo " + s.tipo + ".\n", null );
+																													}else if(e >= s.dimension1 || e1>= s.dimension2){
+																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque la posición está fuera de límites.\n", null );
 																													}else{
 																														s.valorDVector2[e][e1] = e2;  
 																														tabla.put(i, s);
@@ -1357,6 +1365,8 @@ class CUP$Parser$actions {
 																													}
 																													else if(s.tipo != "BOOLEANO"){
 																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque este es de tipo " + s.tipo + ".\n", null );
+																													}else if(e >= s.dimension1 || e1>= s.dimension2){
+																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque la posición está fuera de límites.\n", null );
 																													}else{
 																														s.valorBVector2[e][e1] = e2;  
 																														tabla.put(i, s);
@@ -1394,6 +1404,8 @@ class CUP$Parser$actions {
 																													}
 																													else if(s.tipo != "CARACTER"){
 																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque este es de tipo " + s.tipo + ".\n", null );
+																													}else if(e >= s.dimension1 || e1>= s.dimension2){
+																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque la posición está fuera de límites.\n", null );
 																													}else{
 																														s.valorCVector2[e][e1] = e2;  
 																														tabla.put(i, s);
@@ -2135,6 +2147,8 @@ class CUP$Parser$actions {
 																													}
 																													else if(s.tipo != "ENTERO" && s.tipo != "REAL"){
 																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque este es de tipo " + s.tipo + ".\n", null );
+																													}else if(e >= s.dimension1){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque la posición está fuera de límites.\n", null );
 																													}else{
 																														s.valorDVector[e] = e1;  
 																														tabla.put(i, s);
@@ -2170,6 +2184,8 @@ class CUP$Parser$actions {
 																													}
 																													else if(s.tipo != "BOOLEANO"){
 																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque este es de tipo " + s.tipo + ".\n", null );
+																													}else if(e >= s.dimension1){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque la posición está fuera de límites.\n", null );
 																													}else{
 																														s.valorBVector[e] = e1;  
 																														tabla.put(i, s);
@@ -2205,6 +2221,8 @@ class CUP$Parser$actions {
 																													}
 																													else if(s.tipo != "CARACTER"){
 																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque este es de tipo " + s.tipo + ".\n", null );
+																													}else if(e >= s.dimension1){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque la posición está fuera de límites.\n", null );
 																													}else{
 																														s.valorCVector[e] = e1;  
 																														tabla.put(i, s);
@@ -2243,6 +2261,8 @@ class CUP$Parser$actions {
 																													}
 																													else if(s.tipo != "ENTERO" && s.tipo != "REAL"){
 																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque este es de tipo " + s.tipo + ".\n", null );
+																													}else if(e >= s.dimension1 || e1 >= s.dimension2){
+																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque la posición está fuera de límites.\n", null );
 																													}else{
 																														s.valorDVector2[e][e1] = e2;  
 																														tabla.put(i, s);
@@ -2281,6 +2301,8 @@ class CUP$Parser$actions {
 																													}
 																													else if(s.tipo != "BOOLEANO"){
 																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque este es de tipo " + s.tipo + ".\n", null );
+																													}else if(e >= s.dimension1 || e1 >= s.dimension2){
+																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque la posición está fuera de límites.\n", null );
 																													}else{
 																														s.valorBVector2[e][e1] = e2;  
 																														tabla.put(i, s);
@@ -2319,6 +2341,8 @@ class CUP$Parser$actions {
 																													}
 																													else if(s.tipo != "CARACTER"){
 																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque este es de tipo " + s.tipo + ".\n", null );
+																													}else if(e >= s.dimension1 || e1 >= s.dimension2){
+																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque la posición está fuera de límites.\n", null );
 																													}else{
 																														s.valorCVector2[e][e1] = e2;  
 																														tabla.put(i, s);
