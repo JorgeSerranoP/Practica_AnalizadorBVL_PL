@@ -59,9 +59,10 @@ import java.util.*;
 
 Newline    = \r | \n | \r\n
 Whitespace = [ \t\f] | {Newline}
-Number     = [0-9]+
+Number     = [1-9][0-9]+
 RealNumber = [0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 HexNumber  = "0X"[0-9A-F]+|"0x"[0-9A-F]+
+OctalNumber = 0[0-7]*
 Character = '(.{1})'
 Identifier = [a-zA-Z_][a-zA-Z0-9_]*
 
@@ -126,8 +127,9 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
   {Character}  { return symbolFactory.newSymbol("CHAR", CHAR, yytext().charAt(1)); }
   {Identifier} { return symbolFactory.newSymbol("IDENTIFIER", IDENTIFIER, yytext()); }
   {Number}     { return symbolFactory.newSymbol("NUMBER", NUMBER, Double.parseDouble(yytext())); }
-  {RealNumber} { return symbolFactory.newSymbol("NUMBER", NUMBER, Double.parseDouble(yytext()));}
+  {OctalNumber}  { return symbolFactory.newSymbol("NUMBER", NUMBER, Double.valueOf(Integer.parseInt(yytext(), 8)));}
   {HexNumber}  { return symbolFactory.newSymbol("NUMBER", NUMBER, Double.valueOf(Integer.decode(yytext())));}
+  {RealNumber} { return symbolFactory.newSymbol("NUMBER", NUMBER, Double.parseDouble(yytext()));}
   {Comment}    { }
 }
 
