@@ -19,6 +19,9 @@ parser code {:
   String id = "";
   ArrayList listID = new ArrayList();
   ArrayList listIDFlujo = new ArrayList();
+public void syntax_error(Symbol s) {
+  report_error("Error de sintaxis en linea " + s.left, null);
+}
 :};
 
 action code {:
@@ -86,22 +89,22 @@ tipo      		::= ENTERO 												{: RESULT =  "ENTERO";		:}
 				
 exprNum         ::= exprNum:e PLUS exprNum:e1          					{: 
 																			if ( e == null || e1 == null ) {
-																				parser.report_error( "No se puede realizar la suma porque hay una variable no asignada ", new Symbol( sym.IDENTIFIER, e ) );
+																				parser.report_error( "No se puede realizar la suma porque hay una variable no asignada. \n", null );
 																			}else  RESULT = e+e1;
 																		:}
 	            | exprNum:e MINUS exprNum: e1          					{: 
 																			if ( e == null || e1 == null ) {
-																				parser.report_error( "No se puede realizar la resta porque hay una variable no asignada ", new Symbol( sym.IDENTIFIER, e ) );
+																				parser.report_error( "No se puede realizar la resta porque hay una variable no asignada. \n", null );
 																			}else  RESULT = e-e1;
 																		:}
 	            | exprNum:e TIMES exprNum: e1          					{: 
 																			if ( e == null || e1 == null ) {
-																				parser.report_error( "No se puede realizar la multiplicación porque hay una variable no asignada ", new Symbol( sym.IDENTIFIER, e ) );
+																				parser.report_error( "No se puede realizar la multiplicación porque hay una variable no asignada. \n", null );
 																			}else  RESULT = e*e1;
 																		:}
 	            | exprNum:e DIVISION exprNum: e1          				{: 
 																			if ( e == null || e1 == null ) {
-																				parser.report_error( "No se puede realizar la división porque hay una variable no asignada ", new Symbol( sym.IDENTIFIER, e ) );
+																				parser.report_error( "No se puede realizar la división porque hay una variable no asignada. \n", null );
 																			}else  RESULT = e/e1;
 																		:}
 	            | MINUS exprNum:e                 						{: RESULT = -e;             :}
@@ -111,24 +114,23 @@ exprNum         ::= exprNum:e PLUS exprNum:e1          					{:
 				| IDENTIFIER:i											{: 
 																			simboloLista s = tabla.buscar(i);
 																			if ( s == null ) {
-																				parser.report_error( "No hay un valor asignado a la variable " + i, new Symbol( sym.IDENTIFIER, i ) );
+																				parser.report_error( "No hay un valor asignado a la variable " + i + ".\n", null );
 																			}else  RESULT = s.valorD;
 																		:}
 				| IDENTIFIER:i exprVector:e								{: 
 																			simboloLista s = tabla.buscar(i);
 																			if ( s == null ) {
-																				parser.report_error( "No existe el vector " + i , new Symbol( sym.IDENTIFIER, i ) );
-																			}
-																			else if(s.valorDVector[e] == null){ parser.report_error( "No hay un valor asignado al vector " + i + " en la posición " + e, new Symbol( sym.IDENTIFIER, i ) );
+																				parser.report_error( "No existe el vecrtor " + i + ".\n", null );
+																			} else if(s.valorDVector[e] == null){ parser.report_error( "No hay un valor asignado al vector " + i + " en la posición " + e + ".\n", null );
 																			}
 																			else RESULT = s.valorDVector[e];
 																		:}
 				| IDENTIFIER:i exprVector:e	exprVector:e1				{: 
 																			simboloLista s = tabla.buscar(i);
 																			if ( s == null ) {
-																				parser.report_error( "No existe el vector " + i , new Symbol( sym.IDENTIFIER, i ) );
+																				parser.report_error( "No existe el vecrtor " + i + ".\n", null );
 																			}
-																			else if(s.valorDVector2[e][e1] == null){ parser.report_error( "No hay un valor asignado al vector " + i + " en la posición [" + e + "][" + e1 + "]", new Symbol( sym.IDENTIFIER, i ) );
+																			else if(s.valorDVector2[e][e1] == null){ parser.report_error( "No hay un valor asignado al vector " + i + " en la posición [" + e + "][" + e1 + "]" + ".\n", null );
 																			}
 																			else RESULT = s.valorDVector2[e][e1];
 																		:}
@@ -136,18 +138,18 @@ exprNum         ::= exprNum:e PLUS exprNum:e1          					{:
 
 varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{: 
 																			if ( t != "ENTERO" ) {
-																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t, new Symbol( sym.IDENTIFIER, i ) );
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t + ".\n", null );
 																			}else tabla.insertar(t,i,e,null,null);	
 																		:}
 				| tipo:t IDENTIFIER:i ASIGNATION exprBool:e     		{: 
 																			if ( t != "BOOLEANO" ) {
-																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t, new Symbol( sym.IDENTIFIER, i ) );
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t + ".\n", null );
 																			}else tabla.insertar(t,i,null,e,null);  	
 																		:}
 				| tipo:t IDENTIFIER:i ASIGNATION exprChar:e     		{: 
 																			if ( t != "CARACTER" ) {
-																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t, new Symbol( sym.IDENTIFIER, i ) );
-																			}else tabla.insertar(t,i,null,null,e);  	
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t + ".\n", null );
+																			}else tabla.insertar(t,i,null,null,e);  
 																		:}
 				| tipo:t IDENTIFIER:i ASIGNATION ENTRADA     		    {: tabla.insertar(t,i,null,null,null);   	:}
 				| tipo:t IDENTIFIER:i doubleDecl:d						{: listID.add(i);
@@ -159,7 +161,7 @@ varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{:
 				| IDENTIFIER:i ASIGNATION exprNum:e						{: 
 																			simboloLista s = tabla.buscar(i);
 																			if ( s.tipo != "ENTERO" ) {
-																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo, new Symbol( sym.IDENTIFIER, i ) );
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo + ".\n", null );
 																			}else tabla.insertar(s.tipo,i,e,null,null);	
 																		:}
 				| IDENTIFIER:i ASIGNATION ENTRADA						{: simboloLista s = tabla.buscar(i); s.isChanged = true;
@@ -167,13 +169,13 @@ varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{:
 				| IDENTIFIER:i ASIGNATION exprBool:e					{: 
 																			simboloLista s = tabla.buscar(i);
 																			if ( s.tipo != "BOOLEANO" ) {
-																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo, new Symbol( sym.IDENTIFIER, i ) );
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo + ".\n", null);
 																			}else tabla.insertar(s.tipo,i,null,e,null);	
 																		:}
 				| IDENTIFIER:i ASIGNATION exprChar:e					{: 
 																			simboloLista s = tabla.buscar(i);
 																			if ( s.tipo != "CARACTER" ) {
-																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo, new Symbol( sym.IDENTIFIER, i ) );
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo + ".\n", null );
 																			}else tabla.insertar(s.tipo,i,null,null,e);	
 																		:}
 				| VECTOR tipo:t IDENTIFIER:i exprVector:e  													{: tabla.insertarVector(t,i,null,null,null,e,null);	 :}
@@ -193,20 +195,56 @@ doubleDecl      ::= COMA IDENTIFIER:i doubleDecl:d						{: listID.add(i);			:}
 				| 														{: 			:}
 				;
          		 	 	 
-exprBool        ::= exprNum:e LESSTHAN exprNum:e1          				{: if ( e < e1) RESULT = true; 										
-																		else RESULT = false;		 	  	:} 
-	            | exprNum:e MORETHAN exprNum:e1          				{: if ( e > e1) RESULT = true; 										
-																		else RESULT = false;		 	  	:} 
-	            | exprNum:e ISEQUAL exprNum:e1         					{: if ( e == e1) RESULT = true; 										
-																		else RESULT = false;		 	 	:}
+exprBool        ::= exprNum:e LESSTHAN exprNum:e1          				{:
+																			if ( e == null || e1 == null ) {
+																				parser.report_error( "No se puede realizar la comparación porque hay una variable no asignada. \n", null );
+																			}else  {
+																				if ( e < e1) RESULT = true; 										
+																				else RESULT = false;	
+																			}		
+																		:} 
+	            | exprNum:e MORETHAN exprNum:e1          				{:
+																			if ( e == null || e1 == null ) {
+																				parser.report_error( "No se puede realizar la comparación porque hay una variable no asignada. \n", null );
+																			}else  {
+																				if ( e > e1) RESULT = true; 										
+																				else RESULT = false;	
+																			}		
+																		:}
+	            | exprNum:e ISEQUAL exprNum:e1         					{:
+																			if ( e == null || e1 == null ) {
+																				parser.report_error( "No se puede realizar la comparación porque hay una variable no asignada. \n", null );
+																			}else  {
+																				if ( e == e1) RESULT = true; 										
+																				else RESULT = false;	
+																			}	
+																		:}
 				| TRUE													{: RESULT = true;  					:}
 				| FALSE													{: RESULT = false; 					:}
-				| exprBool:e AND exprBool:e1							{: if (e && e1) RESULT = true;
-																		else RESULT = false; 				:}
-			    | exprBool:e OR exprBool:e1								{: if (e || e1) RESULT = true;
-																		else RESULT = false; 				:}
-				| NOT exprBool:e1										{: if (e1) RESULT = false;
-																		else RESULT = true; 				:}
+				| exprBool:e AND exprBool:e1							{:
+																			if ( e == null || e1 == null ) {
+																				parser.report_error( "No se puede realizar la comparación porque hay una variable no asignada. \n", null );
+																			}else  {
+																				if ( e && e1) RESULT = true; 										
+																				else RESULT = false;	
+																			}
+																		:}
+			    | exprBool:e OR exprBool:e1								{:
+																			if ( e == null || e1 == null ) {
+																				parser.report_error( "No se puede realizar la comparación porque hay una variable no asignada. \n", null );
+																			}else  {
+																				if ( e || e1) RESULT = true; 										
+																				else RESULT = false;	
+																			}
+																		:}
+				| NOT exprBool:e1										{:
+																			if ( e1 == null ) {
+																				parser.report_error( "No se puede realizar la comparación porque hay una variable no asignada. \n", null );
+																			}else  {
+																				if (e1) RESULT = false; 										
+																				else RESULT = true;	
+																			}	
+																		:}
 				;
 				
 exprChar        ::= CHAR:c												{: RESULT = c;                      :}
