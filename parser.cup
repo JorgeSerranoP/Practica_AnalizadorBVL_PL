@@ -46,7 +46,8 @@ scan with {: return lexer.next_token(); :};
 terminal           SEMI, PLUS, MINUS, TIMES, DIVISION, UMINUS, LPAREN, RPAREN,
 EQUAL, TRUE, FALSE, ASIGNATION, MORETHAN, LESSTHAN, ISEQUAL, AND, NOT, OR, 
 FINMIENTRAS, VECTOR, MIENTRAS, SI, ENTRADA, ENTONCES, SINO, FINSI, COMA, LBRACKET, RBRACKET;
-terminal Double    NUMBER;        // our scanner provides numbers as doubles
+terminal Integer    NUMBER;        // our scanner provides numbers as doubles
+terminal Double    REALNUMBER;  
 terminal Character CHAR;
 terminal String IDENTIFIER, ENTERO, REAL, BOOLEANO, CARACTER;
 
@@ -110,7 +111,8 @@ exprNum         ::= exprNum:e PLUS exprNum:e1          					{:
 	            | MINUS exprNum:e                 						{: RESULT = -e;             :}
 	            | PLUS exprNum:e                 						{: RESULT = +e;             :}	       
 	            | LPAREN exprNum:e RPAREN          						{: RESULT = e;              :}
-				| NUMBER: n				   								{: RESULT = n;              :}
+	            | NUMBER:n												{: RESULT = Double.valueOf(n.intValue());              :}
+	            | REALNUMBER: n				   							{: RESULT = n;              :}
 				| IDENTIFIER:i											{: 
 																			simboloLista s = tabla.buscar(i);
 																			if ( s == null ) {
