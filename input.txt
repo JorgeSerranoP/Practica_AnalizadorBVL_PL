@@ -20,6 +20,8 @@ b:=2; //entrada de teclado
 c:=3; //entrada de teclado
 SI a>b AND a>c ENTONCES // a es el máximo
 max:=a;
+vector real lol[2];
+lol[1] := 0;
 SINO // el máximo es b o c
 SI b>a AND b>c ENTONCES // b es el máximo
 max:=b;

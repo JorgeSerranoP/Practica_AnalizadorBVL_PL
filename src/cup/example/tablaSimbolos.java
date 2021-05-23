@@ -195,40 +195,40 @@ public class tablaSimbolos{
 				 simboloLista s = (simboloLista)it.next();
 				 //Símbolos normales
 				 if(s.tipo.equalsIgnoreCase("Entero") && s.dimension1 == null) 
-					 System.out.println(s.tipo + " " + s.id + " := "+ s.valorD+ s.isChanged);
+					 System.out.println(s.tipo + " " + s.id + " := "+ s.valorD + " //Modificado: " + s.isChanged);
 				 if(s.tipo.equalsIgnoreCase("Real") && s.dimension1 == null) 
-					 System.out.println(s.tipo + " " + s.id + " := "+ s.valorD+ s.isChanged );
+					 System.out.println(s.tipo + " " + s.id + " := "+ s.valorD + " //Modificado: " + s.isChanged);
 				 if(s.tipo.equalsIgnoreCase("Booleano") && s.dimension1 == null) 
-					 System.out.println(s.tipo + " " + s.id + " := "+ s.valorB + s.isChanged);
+					 System.out.println(s.tipo + " " + s.id + " := "+ s.valorB + " //Modificado: " + s.isChanged);
 				 if(s.tipo.equalsIgnoreCase("Caracter") && s.dimension1 == null) 
-					 System.out.println(s.tipo + " " + s.id + " := "+ s.valorC);	
+					 System.out.println(s.tipo + " " + s.id + " := "+ s.valorC + " //Modificado: " + s.isChanged);	
 				 //Vectores dos dimensiones
 				 if(s.dimension1 != null && s.dimension2 != null) {
 					 if(s.tipo.equalsIgnoreCase("Entero")) {
 						 for (int i = 0; i < s.dimension1; i++){
 							 for (int j = 0; j < s.dimension2; j++){
-								 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "]" + "[" + j + "] := "+ s.valorDVector2[i][j]+ s.isChanged );
+								 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "]" + "[" + j + "] := "+ s.valorDVector2[i][j] + " //Modificado: " + s.isChanged);
 							 }
 						 }
 					 }
 					 if(s.tipo.equalsIgnoreCase("Real")) { 
 						 for (int i = 0; i < s.dimension1; i++){
 							 for (int j = 0; j < s.dimension2; j++){
-								 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "]" + "[" + j + "] := "+ s.valorDVector2[i][j]+ s.isChanged);
+								 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "]" + "[" + j + "] := "+ s.valorDVector2[i][j] + " //Modificado: " + s.isChanged);
 							 }
 						 }
 					 }
 					 if(s.tipo.equalsIgnoreCase("Booleano")) { 
 						 for (int i = 0; i < s.dimension1; i++){
 							 for (int j = 0; j < s.dimension2; j++){
-								 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "]" + "[" + j + "] := "+ s.valorBVector2[i][j]+ s.isChanged);
+								 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "]" + "[" + j + "] := "+ s.valorBVector2[i][j] + " //Modificado: " + s.isChanged);
 							 }
 						 }
 					 }
 					 if(s.tipo.equalsIgnoreCase("Caracter")) { 
 						 for (int i = 0; i < s.dimension1; i++){
 							 for (int j = 0; j < s.dimension2; j++){
-								 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "]" + "[" + j + "] := "+ s.valorCVector2[i][j]+ s.isChanged);
+								 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "]" + "[" + j + "] := "+ s.valorCVector2[i][j] + " //Modificado: " + s.isChanged);
 							 }
 						 }
 					 }
@@ -237,22 +237,22 @@ public class tablaSimbolos{
 				 if(s.dimension1 != null && s.dimension2 == null) {
 					 if(s.tipo.equalsIgnoreCase("Entero")) {
 						 for (int i = 0; i < s.dimension1; i++){
-							 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "] := "+ s.valorDVector[i]+ s.isChanged);
+							 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "] := "+ s.valorDVector[i] + " //Modificado: " + s.isChanged);
 						 }
 					 }
 					 if(s.tipo.equalsIgnoreCase("Real")) { 
 						 for (int i = 0; i < s.dimension1; i++){
-							 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "] := "+ s.valorDVector[i]+ s.isChanged);
+							 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "] := "+ s.valorDVector[i] + " //Modificado: " + s.isChanged);
 						 }
 					 }
 					 if(s.tipo.equalsIgnoreCase("Booleano")) { 
 						 for (int i = 0; i < s.dimension1; i++){
-							 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "] := "+ s.valorBVector[i]+ s.isChanged);
+							 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "] := "+ s.valorBVector[i] + " //Modificado: " + s.isChanged);
 						 }
 				 	 }
 					 if(s.tipo.equalsIgnoreCase("Caracter")) { 
 						 for (int i = 0; i < s.dimension1; i++){
-							 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "] := "+ s.valorCVector[i]+ s.isChanged);
+							 System.out.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "] := "+ s.valorCVector[i] + " //Modificado: " + s.isChanged);
 						 }
 					 }
 				 }
