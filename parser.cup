@@ -114,6 +114,24 @@ exprNum         ::= exprNum:e PLUS exprNum:e1          					{:
 																				parser.report_error( "No hay un valor asignado a la variable " + i, new Symbol( sym.IDENTIFIER, i ) );
 																			}else  RESULT = s.valorD;
 																		:}
+				| IDENTIFIER:i exprVector:e								{: 
+																			simboloLista s = tabla.buscar(i);
+																			if ( s == null ) {
+																				parser.report_error( "No existe el vector " + i , new Symbol( sym.IDENTIFIER, i ) );
+																			}
+																			else if(s.valorDVector[e] == null){ parser.report_error( "No hay un valor asignado al vector " + i + " en la posición " + e, new Symbol( sym.IDENTIFIER, i ) );
+																			}
+																			else RESULT = s.valorDVector[e];
+																		:}
+				| IDENTIFIER:i exprVector:e	exprVector:e1				{: 
+																			simboloLista s = tabla.buscar(i);
+																			if ( s == null ) {
+																				parser.report_error( "No existe el vector " + i , new Symbol( sym.IDENTIFIER, i ) );
+																			}
+																			else if(s.valorDVector2[e][e1] == null){ parser.report_error( "No hay un valor asignado al vector " + i + " en la posición [" + e + "][" + e1 + "]", new Symbol( sym.IDENTIFIER, i ) );
+																			}
+																			else RESULT = s.valorDVector2[e][e1];
+																		:}
 				;
 
 varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{: 
@@ -183,7 +201,7 @@ exprBool        ::= exprNum:e LESSTHAN exprNum:e1          				{: if ( e < e1) R
 																		else RESULT = false;		 	 	:}
 				| TRUE													{: RESULT = true;  					:}
 				| FALSE													{: RESULT = false; 					:}
-				| exprBool:e AND exprBool:e1								{: if (e && e1) RESULT = true;
+				| exprBool:e AND exprBool:e1							{: if (e && e1) RESULT = true;
 																		else RESULT = false; 				:}
 			    | exprBool:e OR exprBool:e1								{: if (e || e1) RESULT = true;
 																		else RESULT = false; 				:}
