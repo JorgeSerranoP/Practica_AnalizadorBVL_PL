@@ -1122,7 +1122,11 @@ class CUP$Parser$actions {
 		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Integer e = (Integer)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG39
- tabla.insertarVector(t,i,null,null,null,e,null);	 
+ 
+																												if ( e == null ) {
+																													parser.report_error( "No se puede asignar el valor .\n", null );
+																												}else tabla.insertarVector(t,i,null,null,null,e,null);
+																											
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDecl",13, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1163,7 +1167,22 @@ class CUP$Parser$actions {
 		Location e1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Double e1 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG41
- simboloLista s = tabla.buscar(i); s.valorDVector[e] = e1;  tabla.put(i, s);  	
+ 
+																												simboloLista s = tabla.buscar(i);
+																												if ( s == null ) {
+																													parser.report_error( "No existe el vector " + i + ".\n", null );
+																												}else{
+																													if(s.dimension2 != null){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque las dimensiones no coinciden.\n", null );
+																													}
+																													else if(s.tipo != "ENTERO"){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque esta es de tipo " + s.tipo + ".\n", null );
+																													}else{
+																														s.valorDVector[e] = e1;  
+																														tabla.put(i, s);
+																													}
+																												}
+																											
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDecl",13, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1182,7 +1201,22 @@ class CUP$Parser$actions {
 		Location e1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Boolean e1 = (Boolean)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG42
- simboloLista s = tabla.buscar(i); s.valorBVector[e] = e1;  tabla.put(i, s);  	
+ 
+																												simboloLista s = tabla.buscar(i);
+																												if ( s == null ) {
+																													parser.report_error( "No existe el vector " + i + ".\n", null );
+																												}else{
+																													if(s.dimension2 != null){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque las dimensiones no coinciden.\n", null );
+																													}
+																													else if(s.tipo != "BOOLEANO"){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque esta es de tipo " + s.tipo + ".\n", null );
+																													}else{
+																														s.valorBVector[e] = e1;  
+																														tabla.put(i, s);
+																													}
+																												}
+																											
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDecl",13, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1201,7 +1235,22 @@ class CUP$Parser$actions {
 		Location e1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Character e1 = (Character)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG43
- simboloLista s = tabla.buscar(i); s.valorCVector[e] = e1;  tabla.put(i, s);  	
+ 
+																												simboloLista s = tabla.buscar(i);
+																												if ( s == null ) {
+																													parser.report_error( "No existe el vector " + i + ".\n", null );
+																												}else{
+																													if(s.dimension2 != null){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque las dimensiones no coinciden.\n", null );
+																													}
+																													else if(s.tipo != "CARACTER"){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque esta es de tipo " + s.tipo + ".\n", null );
+																													}else{
+																														s.valorCVector[e] = e1;  
+																														tabla.put(i, s);
+																													}
+																												}
+																											
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDecl",13, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1223,7 +1272,22 @@ class CUP$Parser$actions {
 		Location e2xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Double e2 = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG44
- simboloLista s = tabla.buscar(i); s.valorDVector2[e][e1] = e2;  tabla.put(i, s); 
+ 
+																												simboloLista s = tabla.buscar(i);
+																												if ( s == null ) {
+																													parser.report_error( "No existe el vector " + i + ".\n", null );
+																												}else{
+																													if(s.dimension2 == null){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque las dimensiones no coinciden.\n", null );
+																													}
+																													else if(s.tipo != "ENTERO"){
+																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque esta es de tipo " + s.tipo + ".\n", null );
+																													}else{
+																														s.valorDVector2[e][e1] = e2;  
+																														tabla.put(i, s);
+																													}
+																												}
+																											
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDecl",13, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1245,7 +1309,22 @@ class CUP$Parser$actions {
 		Location e2xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Boolean e2 = (Boolean)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG45
- simboloLista s = tabla.buscar(i); s.valorBVector2[e][e1] = e2;  tabla.put(i, s); 
+ 
+																												simboloLista s = tabla.buscar(i);
+																												if ( s == null ) {
+																													parser.report_error( "No existe el vector " + i + ".\n", null );
+																												}else{
+																													if(s.dimension2 == null){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque las dimensiones no coinciden.\n", null );
+																													}
+																													else if(s.tipo != "BOOLEANO"){
+																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque esta es de tipo " + s.tipo + ".\n", null );
+																													}else{
+																														s.valorBVector2[e][e1] = e2;  
+																														tabla.put(i, s);
+																													}
+																												}
+																											
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDecl",13, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1267,7 +1346,22 @@ class CUP$Parser$actions {
 		Location e2xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Character e2 = (Character)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG46
- simboloLista s = tabla.buscar(i); s.valorCVector2[e][e1] = e2;  tabla.put(i, s); 
+ 
+																												simboloLista s = tabla.buscar(i);
+																												if ( s == null ) {
+																													parser.report_error( "No existe el vector " + i + ".\n", null );
+																												}else{
+																													if(s.dimension2 == null){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque las dimensiones no coinciden.\n", null );
+																													}
+																													else if(s.tipo != "BOOLEANO"){
+																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque esta es de tipo " + s.tipo + ".\n", null );
+																													}else{
+																														s.valorCVector2[e][e1] = e2;  
+																														tabla.put(i, s);
+																													}
+																												}
+																											
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDecl",13, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

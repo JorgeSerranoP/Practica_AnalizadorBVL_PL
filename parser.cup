@@ -178,14 +178,108 @@ varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{:
 																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo + ".\n", null );
 																			}else tabla.insertar(s.tipo,i,null,null,e);	
 																		:}
-				| VECTOR tipo:t IDENTIFIER:i exprVector:e  													{: tabla.insertarVector(t,i,null,null,null,e,null);	 :}
+				| VECTOR tipo:t IDENTIFIER:i exprVector:e  													{: 
+																												if ( e == null ) {
+																													parser.report_error( "No se puede asignar el valor .\n", null );
+																												}else tabla.insertarVector(t,i,null,null,null,e,null);
+																											:}
 				| VECTOR tipo:t IDENTIFIER:i exprVector:e exprVector:e1 									{: tabla.insertarVector(t,i,null,null,null,e,e1);  	:}				
-				| IDENTIFIER:i exprVector:e ASIGNATION exprNum:e1  											{: simboloLista s = tabla.buscar(i); s.valorDVector[e] = e1;  tabla.put(i, s);  	:}
-				| IDENTIFIER:i exprVector:e ASIGNATION exprBool:e1  										{: simboloLista s = tabla.buscar(i); s.valorBVector[e] = e1;  tabla.put(i, s);  	:}
-				| IDENTIFIER:i exprVector:e ASIGNATION exprChar:e1 											{: simboloLista s = tabla.buscar(i); s.valorCVector[e] = e1;  tabla.put(i, s);  	:}
-				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprNum:e2  							{: simboloLista s = tabla.buscar(i); s.valorDVector2[e][e1] = e2;  tabla.put(i, s); :}
-				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprBool:e2  						    {: simboloLista s = tabla.buscar(i); s.valorBVector2[e][e1] = e2;  tabla.put(i, s); :}
-				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprChar:e2 							{: simboloLista s = tabla.buscar(i); s.valorCVector2[e][e1] = e2;  tabla.put(i, s); :}								
+				| IDENTIFIER:i exprVector:e ASIGNATION exprNum:e1  											{: 
+																												simboloLista s = tabla.buscar(i);
+																												if ( s == null ) {
+																													parser.report_error( "No existe el vector " + i + ".\n", null );
+																												}else{
+																													if(s.dimension2 != null){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque las dimensiones no coinciden.\n", null );
+																													}
+																													else if(s.tipo != "ENTERO"){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque esta es de tipo " + s.tipo + ".\n", null );
+																													}else{
+																														s.valorDVector[e] = e1;  
+																														tabla.put(i, s);
+																													}
+																												}
+																											:}
+				| IDENTIFIER:i exprVector:e ASIGNATION exprBool:e1  										{: 
+																												simboloLista s = tabla.buscar(i);
+																												if ( s == null ) {
+																													parser.report_error( "No existe el vector " + i + ".\n", null );
+																												}else{
+																													if(s.dimension2 != null){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque las dimensiones no coinciden.\n", null );
+																													}
+																													else if(s.tipo != "BOOLEANO"){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque esta es de tipo " + s.tipo + ".\n", null );
+																													}else{
+																														s.valorBVector[e] = e1;  
+																														tabla.put(i, s);
+																													}
+																												}
+																											:}
+				| IDENTIFIER:i exprVector:e ASIGNATION exprChar:e1 											{: 
+																												simboloLista s = tabla.buscar(i);
+																												if ( s == null ) {
+																													parser.report_error( "No existe el vector " + i + ".\n", null );
+																												}else{
+																													if(s.dimension2 != null){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque las dimensiones no coinciden.\n", null );
+																													}
+																													else if(s.tipo != "CARACTER"){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque esta es de tipo " + s.tipo + ".\n", null );
+																													}else{
+																														s.valorCVector[e] = e1;  
+																														tabla.put(i, s);
+																													}
+																												}
+																											:}
+				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprNum:e2  							{: 
+																												simboloLista s = tabla.buscar(i);
+																												if ( s == null ) {
+																													parser.report_error( "No existe el vector " + i + ".\n", null );
+																												}else{
+																													if(s.dimension2 == null){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque las dimensiones no coinciden.\n", null );
+																													}
+																													else if(s.tipo != "ENTERO"){
+																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque esta es de tipo " + s.tipo + ".\n", null );
+																													}else{
+																														s.valorDVector2[e][e1] = e2;  
+																														tabla.put(i, s);
+																													}
+																												}
+																											:}
+				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprBool:e2  						    {: 
+																												simboloLista s = tabla.buscar(i);
+																												if ( s == null ) {
+																													parser.report_error( "No existe el vector " + i + ".\n", null );
+																												}else{
+																													if(s.dimension2 == null){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque las dimensiones no coinciden.\n", null );
+																													}
+																													else if(s.tipo != "BOOLEANO"){
+																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque esta es de tipo " + s.tipo + ".\n", null );
+																													}else{
+																														s.valorBVector2[e][e1] = e2;  
+																														tabla.put(i, s);
+																													}
+																												}
+																											:}
+				| IDENTIFIER:i exprVector:e exprVector:e1 ASIGNATION exprChar:e2 							{: 
+																												simboloLista s = tabla.buscar(i);
+																												if ( s == null ) {
+																													parser.report_error( "No existe el vector " + i + ".\n", null );
+																												}else{
+																													if(s.dimension2 == null){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque las dimensiones no coinciden.\n", null );
+																													}
+																													else if(s.tipo != "BOOLEANO"){
+																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque esta es de tipo " + s.tipo + ".\n", null );
+																													}else{
+																														s.valorCVector2[e][e1] = e2;  
+																														tabla.put(i, s);
+																													}
+																												}
+																											:}
           		;
           		
 exprVector      ::= LBRACKET:b NUMBER:n RBRACKET:b1 					{: RESULT = n.intValue();  			:}
