@@ -1,6 +1,29 @@
-017;
-1;
-0.1;
-.98;
-0;
-13;
+// Operaciones aritméticas y comparación
+ENTERO re1, re2;
+BOOLEANO bo;
+CARACTER ca := 'h'; // variable de tipo carácter, y su literal
+ re1:=5 * +3 - 80/10; // esta expresion debe resultar 7
+ re2:=10 / 5 * re1; // esta expresion debe resultar 4
+ bo :=5<3; // comparación, debe resultar true
+// si un número es positivo
+ENTERO num :=9;
+BOOLEANO espos;
+BOOLEANO espos;
+SI num > 0 ENTONCES
+espos:=TRUE;
+SINO
+espos:=FALSE;
+FINSI
+ENTERO a,b,c,max;
+a:=1;
+b:=2; //entrada de teclado
+c:=3; //entrada de teclado
+SI a>b AND a>c ENTONCES // a es el máximo
+max:=a;
+SINO // el máximo es b o c
+SI b>a AND b>c ENTONCES // b es el máximo
+max:=b;
+SINO // c es el máximo, por descarte
+max:=c;
+FINSI
+FINSI

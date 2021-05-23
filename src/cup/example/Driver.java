@@ -8,6 +8,7 @@ class Driver {
 		Parser parser = new Parser();
 		parser.parse();
 		parser.tabla.imprimir();
+		parser.tabla.rellenarFicheroSalida();
 	}
 	
 }
