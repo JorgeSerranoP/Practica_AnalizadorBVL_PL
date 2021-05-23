@@ -19,9 +19,7 @@ parser code {:
   String id = "";
   ArrayList listID = new ArrayList();
   ArrayList listIDFlujo = new ArrayList();
-public void syntax_error(Symbol s) {
-  report_error("Error de sintaxis en linea " + s.left, null);
-}
+
 :};
 
 action code {:
@@ -139,7 +137,7 @@ exprNum         ::= exprNum:e PLUS exprNum:e1          					{:
 				;
 
 varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{: 
-																			if ( t != "ENTERO" ) {
+																			if ( t != "ENTERO" && t != "REAL") {
 																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t + ".\n", null );
 																			}else tabla.insertar(t,i,e,null,null);	
 																		:}
@@ -162,21 +160,35 @@ varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{:
 																  		:}				
 				| IDENTIFIER:i ASIGNATION exprNum:e						{: 
 																			simboloLista s = tabla.buscar(i);
-																			if ( s.tipo != "ENTERO" ) {
+																			if (s == null){
+																				parser.report_error( "No existe la variable " + i + ".\n", null );
+																			}
+																			else if ( s.tipo != "ENTERO" && s.tipo != "REAL") {
 																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo + ".\n", null );
 																			}else tabla.insertar(s.tipo,i,e,null,null);	
 																		:}
-				| IDENTIFIER:i ASIGNATION ENTRADA						{: simboloLista s = tabla.buscar(i); s.isChanged = true;
-															  			tabla.put(i, s);  	:}
+				| IDENTIFIER:i ASIGNATION ENTRADA						{: 
+																			simboloLista s = tabla.buscar(i);
+																			if (s == null){
+																				parser.report_error( "No existe la variable " + i + ".\n", null );
+																			} else{
+																				s.isChanged = true;
+																				tabla.put(i, s);
+																			}
+																		:}
 				| IDENTIFIER:i ASIGNATION exprBool:e					{: 
 																			simboloLista s = tabla.buscar(i);
-																			if ( s.tipo != "BOOLEANO" ) {
+																			if (s == null){
+																				parser.report_error( "No existe la variable " + i + ".\n", null );
+																			}else if ( s.tipo != "BOOLEANO" ) {
 																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo + ".\n", null);
 																			}else tabla.insertar(s.tipo,i,null,e,null);	
 																		:}
 				| IDENTIFIER:i ASIGNATION exprChar:e					{: 
 																			simboloLista s = tabla.buscar(i);
-																			if ( s.tipo != "CARACTER" ) {
+																			if (s == null){
+																				parser.report_error( "No existe la variable " + i + ".\n", null );
+																			} else if ( s.tipo != "CARACTER" ) {
 																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo + ".\n", null );
 																			}else tabla.insertar(s.tipo,i,null,null,e);	
 																		:}
@@ -194,8 +206,8 @@ varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{:
 																													if(s.dimension2 != null){
 																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque las dimensiones no coinciden.\n", null );
 																													}
-																													else if(s.tipo != "ENTERO"){
-																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque esta es de tipo " + s.tipo + ".\n", null );
+																													else if(s.tipo != "ENTERO" && s.tipo != "REAL"){
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque este es de tipo " + s.tipo + ".\n", null );
 																													}else{
 																														s.valorDVector[e] = e1;  
 																														tabla.put(i, s);
@@ -211,7 +223,7 @@ varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{:
 																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque las dimensiones no coinciden.\n", null );
 																													}
 																													else if(s.tipo != "BOOLEANO"){
-																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque esta es de tipo " + s.tipo + ".\n", null );
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque este es de tipo " + s.tipo + ".\n", null );
 																													}else{
 																														s.valorBVector[e] = e1;  
 																														tabla.put(i, s);
@@ -227,7 +239,7 @@ varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{:
 																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque las dimensiones no coinciden.\n", null );
 																													}
 																													else if(s.tipo != "CARACTER"){
-																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque esta es de tipo " + s.tipo + ".\n", null );
+																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque este es de tipo " + s.tipo + ".\n", null );
 																													}else{
 																														s.valorCVector[e] = e1;  
 																														tabla.put(i, s);
@@ -242,8 +254,8 @@ varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{:
 																													if(s.dimension2 == null){
 																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque las dimensiones no coinciden.\n", null );
 																													}
-																													else if(s.tipo != "ENTERO"){
-																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque esta es de tipo " + s.tipo + ".\n", null );
+																													else if(s.tipo != "ENTERO" && s.tipo != "REAL"){
+																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque este es de tipo " + s.tipo + ".\n", null );
 																													}else{
 																														s.valorDVector2[e][e1] = e2;  
 																														tabla.put(i, s);
@@ -259,7 +271,7 @@ varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{:
 																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque las dimensiones no coinciden.\n", null );
 																													}
 																													else if(s.tipo != "BOOLEANO"){
-																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque esta es de tipo " + s.tipo + ".\n", null );
+																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque este es de tipo " + s.tipo + ".\n", null );
 																													}else{
 																														s.valorBVector2[e][e1] = e2;  
 																														tabla.put(i, s);
@@ -274,8 +286,8 @@ varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{:
 																													if(s.dimension2 == null){
 																														parser.report_error( "No se puede asignar el valor " + e1 + " al vector " + i + "[" + e + "] porque las dimensiones no coinciden.\n", null );
 																													}
-																													else if(s.tipo != "BOOLEANO"){
-																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque esta es de tipo " + s.tipo + ".\n", null );
+																													else if(s.tipo != "CARACTER"){
+																														parser.report_error( "No se puede asignar el valor " + e2 + " al vector " + i + "[" + e + "]" + "[" + e1 + "] porque este es de tipo " + s.tipo + ".\n", null );
 																													}else{
 																														s.valorCVector2[e][e1] = e2;  
 																														tabla.put(i, s);
@@ -284,7 +296,8 @@ varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{:
 																											:}
           		;
           		
-exprVector      ::= LBRACKET:b NUMBER:n RBRACKET:b1 					{: RESULT = n.intValue();  			:}
+exprVector      ::= LBRACKET:b REALNUMBER:n RBRACKET:b1 				{: RESULT = n.intValue();  			:}
+				| LBRACKET:b NUMBER:n RBRACKET:b1 						{: RESULT = n.intValue();  			:}
 				;
 				
 doubleDecl      ::= COMA IDENTIFIER:i doubleDecl:d						{: listID.add(i);			:}

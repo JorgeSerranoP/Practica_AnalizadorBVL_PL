@@ -126,10 +126,10 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
   "Finsi"      { return symbolFactory.newSymbol("FINSI", FINSI); }
   {Character}  { return symbolFactory.newSymbol("CHAR", CHAR, yytext().charAt(1)); }
   {Identifier} { return symbolFactory.newSymbol("IDENTIFIER", IDENTIFIER, yytext()); }
-  {Number}     { return symbolFactory.newSymbol("NUMBER", NUMBER, Integer.parseInt(yytext())); }
   {OctalNumber}  { return symbolFactory.newSymbol("NUMBER", NUMBER, Integer.parseInt(yytext(), 8));}
   {HexNumber}  { return symbolFactory.newSymbol("NUMBER", NUMBER, Integer.decode(yytext()));}
   {RealNumber} { return symbolFactory.newSymbol("REALNUMBER", REALNUMBER, Double.parseDouble(yytext()));}
+  {Number}     { return symbolFactory.newSymbol("NUMBER", NUMBER, Integer.parseInt(yytext())); }
   {Comment}    { }
 }
 
