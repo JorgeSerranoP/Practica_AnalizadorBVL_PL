@@ -133,26 +133,49 @@ exprNum         ::= exprNum:e PLUS exprNum:e1          					{:
 				;
 
 varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{: 
-																			if ( t != "ENTERO" && t != "REAL") {
+																			simboloLista s = tabla.buscar(i);
+																			if (s != null){
+																				parser.report_error( "La variable " + i + " ya ha sido declarada.\n", null );
+																			}
+																			else if ( t != "ENTERO" && t != "REAL") {
 																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t + ".\n", null );
-																			}else tabla.insertar(t,i,e,null,null);	
+																			}else tabla.insertar(t,i,e,false,'0');	
 																		:}
 				| tipo:t IDENTIFIER:i ASIGNATION exprBool:e     		{: 
-																			if ( t != "BOOLEANO" ) {
+																			simboloLista s = tabla.buscar(i);
+																			if (s != null){
+																				parser.report_error( "La variable " + i + " ya ha sido declarada.\n", null );
+																			}
+																			else if ( t != "BOOLEANO" ) {
 																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t + ".\n", null );
-																			}else tabla.insertar(t,i,null,e,null);  	
+																			}else tabla.insertar(t,i,0.0,e,'0');  	
 																		:}
 				| tipo:t IDENTIFIER:i ASIGNATION exprChar:e     		{: 
-																			if ( t != "CARACTER" ) {
-																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t + ".\n", null );
-																			}else tabla.insertar(t,i,null,null,e);  
-																		:}
-				| tipo:t IDENTIFIER:i ASIGNATION ENTRADA     		    {: tabla.insertar(t,i,null,null,null).isChanged = true;   	:}
-				| tipo:t IDENTIFIER:i doubleDecl:d						{: listID.add(i);
-																			for(int j = 0; j < listID.size(); j++){
-																				 tabla.insertar(t,listID.get(j).toString(),null,null,null);
+																			simboloLista s = tabla.buscar(i);
+																			if (s != null){
+																				parser.report_error( "La variable " + i + " ya ha sido declarada.\n", null );
 																			}
-																			listID.clear();			  
+																			else if ( t != "CARACTER" ) {
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t + ".\n", null );
+																			}else tabla.insertar(t,i,0.0,false,e);  
+																		:}
+				| tipo:t IDENTIFIER:i ASIGNATION ENTRADA     		    {: 
+																			simboloLista s = tabla.buscar(i);
+																			if (s != null){
+																				parser.report_error( "La variable " + i + " ya ha sido declarada.\n", null );
+																			}else tabla.insertar(t,i,0.0,false,'0').isChanged = true;   
+																		:}
+				| tipo:t IDENTIFIER:i doubleDecl:d						{: 
+																			simboloLista s = tabla.buscar(i);
+																			if (s != null){
+																				parser.report_error( "La variable " + i + " ya ha sido declarada.\n", null );
+																			} else{
+																				listID.add(i);
+																				for(int j = 0; j < listID.size(); j++){
+																				 	tabla.insertar(t,listID.get(j).toString(),0.0,false,'0');
+																				}
+																				listID.clear();
+																			}	  
 																  		:}				
 				| IDENTIFIER:i ASIGNATION exprNum:e						{: 
 																			simboloLista s = tabla.buscar(i);
@@ -161,7 +184,7 @@ varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{:
 																			}
 																			else if ( s.tipo != "ENTERO" && s.tipo != "REAL") {
 																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo + ".\n", null );
-																			}else tabla.insertar(s.tipo,i,e,null,null);	
+																			}else tabla.insertar(s.tipo,i,e,false,'0');	
 																		:}
 				| IDENTIFIER:i ASIGNATION ENTRADA						{: 
 																			simboloLista s = tabla.buscar(i);
@@ -178,7 +201,7 @@ varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{:
 																				parser.report_error( "No existe la variable " + i + ".\n", null );
 																			}else if ( s.tipo != "BOOLEANO" ) {
 																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo + ".\n", null);
-																			}else tabla.insertar(s.tipo,i,null,e,null);	
+																			}else tabla.insertar(s.tipo,i,0.0,e,'0');	
 																		:}
 				| IDENTIFIER:i ASIGNATION exprChar:e					{: 
 																			simboloLista s = tabla.buscar(i);
@@ -186,10 +209,20 @@ varDecl		    ::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{:
 																				parser.report_error( "No existe la variable " + i + ".\n", null );
 																			} else if ( s.tipo != "CARACTER" ) {
 																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo + ".\n", null );
-																			}else tabla.insertar(s.tipo,i,null,null,e);	
+																			}else tabla.insertar(s.tipo,i,0.0,false,e);	
 																		:}
-				| VECTOR tipo:t IDENTIFIER:i exprVector:e  													{: tabla.insertarVector(t,i,null,null,null,e,null); :}
-				| VECTOR tipo:t IDENTIFIER:i exprVector:e exprVector:e1 									{: tabla.insertarVector(t,i,null,null,null,e,e1);  	:}				
+				| VECTOR tipo:t IDENTIFIER:i exprVector:e  													{: 
+																												simboloLista s = tabla.buscar(i);
+																												if (s != null){
+																													parser.report_error( "El vector " + i + " ya ha sido declarado.\n", null );
+																												} else tabla.insertarVector(t,i,0.0,false,'0',e,null); 
+																											:}
+				| VECTOR tipo:t IDENTIFIER:i exprVector:e exprVector:e1 									{: 
+																												simboloLista s = tabla.buscar(i);
+																												if (s != null){
+																													parser.report_error( "El vector " + i + " ya ha sido declarado.\n", null );
+																												} else tabla.insertarVector(t,i,0.0,false,'0',e,e1);
+																											:}			
 				| IDENTIFIER:i exprVector:e ASIGNATION exprNum:e1  											{: 
 																												simboloLista s = tabla.buscar(i);
 																												if ( s == null ) {
@@ -408,35 +441,49 @@ expr_listFlujo  ::= expr_listFlujo exprNum:e SEMI        				{: System.out.print
 				;
 				
 varDeclFlujo	::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{: 
-																			if ( t != "ENTERO" && t != "REAL") {
-																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t + ".\n", null );
-																			}else{
-																				tabla.insertar(t,i,e,null,null);
-																				listIDFlujo.add(i);
+																			simboloLista s = tabla.buscar(i);
+																			if (s != null){
+																				parser.report_error( "La variable " + i + " ya ha sido declarada.\n", null );
 																			}
+																			else if ( t != "ENTERO" && t != "REAL") {
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t + ".\n", null );
+																			}else tabla.insertar(t,i,e,false,'0');	
 																		:}
 				| tipo:t IDENTIFIER:i ASIGNATION exprBool:e     		{: 
-																			if ( t != "BOOLEANO" ) {
-																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t + ".\n", null );
-																			}else{
-																				tabla.insertar(t,i,null,e,null);  	
-																				listIDFlujo.add(i);
+																			simboloLista s = tabla.buscar(i);
+																			if (s != null){
+																				parser.report_error( "La variable " + i + " ya ha sido declarada.\n", null );
 																			}
+																			else if ( t != "BOOLEANO" ) {
+																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t + ".\n", null );
+																			}else tabla.insertar(t,i,0.0,e,'0');  	
 																		:}
 				| tipo:t IDENTIFIER:i ASIGNATION exprChar:e     		{: 
-																			if ( t != "CARACTER" ) {
+																			simboloLista s = tabla.buscar(i);
+																			if (s != null){
+																				parser.report_error( "La variable " + i + " ya ha sido declarada.\n", null );
+																			}
+																			else if ( t != "CARACTER" ) {
 																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t + ".\n", null );
-																			}else{
-																				tabla.insertar(t,i,null,null,e);
-																				listIDFlujo.add(i);
-																			}
+																			}else tabla.insertar(t,i,0.0,false,e);  
 																		:}
-				| tipo:t IDENTIFIER:i ASIGNATION ENTRADA     		    {: tabla.insertar(t,i,null,null,null).isChanged = true;     :}
-				| tipo:t  IDENTIFIER:i doubleDecl:d						{: listID.add(i);
-																			for(int j = 0; j < listID.size(); j++){
-																				 tabla.insertar(t,listID.get(j).toString(),null,null,null);
-																			}
-																			listID.clear();			  
+				| tipo:t IDENTIFIER:i ASIGNATION ENTRADA     		    {: 
+																			simboloLista s = tabla.buscar(i);
+																			if (s != null){
+																				parser.report_error( "La variable " + i + " ya ha sido declarada.\n", null );
+																			}else tabla.insertar(t,i,0.0,false,'0').isChanged = true;   
+																		:}
+				| tipo:t  IDENTIFIER:i doubleDecl:d						{: 
+																			simboloLista s = tabla.buscar(i);
+																			if (s != null){
+																				parser.report_error( "La variable " + i + " ya ha sido declarada.\n", null );
+																			} else{
+																				listID.add(i);
+																				for(int j = 0; j < listID.size(); j++){
+																				 	tabla.insertar(t,listID.get(j).toString(),0.0,false,'0');
+																				}
+																				listID.clear();
+																			}	  
 																  		:}					
 				| IDENTIFIER:i ASIGNATION exprNum:e						{: 
 																			simboloLista s = tabla.buscar(i);
@@ -446,7 +493,7 @@ varDeclFlujo	::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{:
 																			else if ( s.tipo != "ENTERO" && s.tipo != "REAL") {
 																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo + ".\n", null );
 																			}else{
-																				tabla.insertar(s.tipo,i,e,null,null);
+																				tabla.insertar(s.tipo,i,e, false,'0');
 																				listIDFlujo.add(i);
 																			}
 																		:}
@@ -466,7 +513,7 @@ varDeclFlujo	::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{:
 																			}else if ( s.tipo != "BOOLEANO" ) {
 																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo + ".\n", null);
 																			}else{
-																				tabla.insertar(s.tipo,i,null,e,null);
+																				tabla.insertar(s.tipo,i,0.0,e,'0');
 																				listIDFlujo.add(i);
 																			}	
 																		:}
@@ -477,12 +524,22 @@ varDeclFlujo	::= tipo:t IDENTIFIER:i ASIGNATION exprNum:e     		{:
 																			} else if ( s.tipo != "CARACTER" ) {
 																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo + ".\n", null );
 																			}else{ 
-																				tabla.insertar(s.tipo,i,null,null,e);
+																				tabla.insertar(s.tipo,i,0.0,false,e);
 																				listIDFlujo.add(i);
 																			}
 																		:}
-				| VECTOR tipo:t IDENTIFIER:i exprVector:e  													{: tabla.insertarVector(t,i,null,null,null,e,null);	listIDFlujo.add(i); :}
-				| VECTOR tipo:t IDENTIFIER:i exprVector:e exprVector:e1 									{: tabla.insertarVector(t,i,null,null,null,e,e1); listIDFlujo.add(i); 	:}				
+				| VECTOR tipo:t IDENTIFIER:i exprVector:e  													{: 
+																												simboloLista s = tabla.buscar(i);
+																												if (s != null){
+																													parser.report_error( "El vector " + i + " ya ha sido declarado.\n", null );
+																												} else tabla.insertarVector(t,i,0.0,false,'0',e,null); 
+																											:}
+				| VECTOR tipo:t IDENTIFIER:i exprVector:e exprVector:e1 									{: 
+																												simboloLista s = tabla.buscar(i);
+																												if (s != null){
+																													parser.report_error( "El vector " + i + " ya ha sido declarado.\n", null );
+																												} else tabla.insertarVector(t,i,0.0,false,'0',e,e1);
+																											:}			
 				| IDENTIFIER:i exprVector:e ASIGNATION exprNum:e1  											{: 
 																												simboloLista s = tabla.buscar(i);
 																												if ( s == null ) {

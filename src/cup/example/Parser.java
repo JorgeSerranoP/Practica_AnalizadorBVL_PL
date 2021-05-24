@@ -524,6 +524,7 @@ public class Parser extends java_cup.runtime.lr_parser {
   ArrayList listIDFlujo = new ArrayList();
 
 
+
 /** Cup generated class to encapsulate user supplied action code.*/
 @SuppressWarnings({"rawtypes", "unchecked", "unused"})
 class CUP$Parser$actions {
@@ -876,7 +877,7 @@ class CUP$Parser$actions {
 		Location nxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Double n = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG26
- RESULT = n;                							
+ RESULT = n;              							
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("exprNum",5, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -913,7 +914,7 @@ class CUP$Parser$actions {
  
 																			simboloLista s = tabla.buscar(i);
 																			if ( s == null ) {
-																				parser.report_error( "No existe el vector " + i + ".\n", null );
+																				parser.report_error( "No existe el vecrtor " + i + ".\n", null );
 																			} else if(s.valorDVector[e] == null){ parser.report_error( "No hay un valor asignado al vector " + i + " en la posición " + e + ".\n", null );
 																			}
 																			else RESULT = s.valorDVector[e];
@@ -939,7 +940,7 @@ class CUP$Parser$actions {
  
 																			simboloLista s = tabla.buscar(i);
 																			if ( s == null ) {
-																				parser.report_error( "No existe el vector " + i + ".\n", null );
+																				parser.report_error( "No existe el vecrtor " + i + ".\n", null );
 																			}
 																			else if(s.valorDVector2[e][e1] == null){ parser.report_error( "No hay un valor asignado al vector " + i + " en la posición [" + e + "][" + e1 + "]" + ".\n", null );
 																			}
@@ -1045,7 +1046,8 @@ class CUP$Parser$actions {
 																			simboloLista s = tabla.buscar(i);
 																			if (s != null){
 																				parser.report_error( "La variable " + i + " ya ha sido declarada.\n", null );
-																			}else tabla.insertar(t,i,0.0,false,'0').isChanged = true;   	
+																			}else tabla.insertar(t,i,0.0,false,'0').isChanged = true;   
+																		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDecl",10, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1064,7 +1066,7 @@ class CUP$Parser$actions {
 		Location dxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		String d = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG34
- 	
+ 
 																			simboloLista s = tabla.buscar(i);
 																			if (s != null){
 																				parser.report_error( "La variable " + i + " ya ha sido declarada.\n", null );
@@ -1074,7 +1076,7 @@ class CUP$Parser$actions {
 																				 	tabla.insertar(t,listID.get(j).toString(),0.0,false,'0');
 																				}
 																				listID.clear();
-																			}			  
+																			}	  
 																  		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDecl",10, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1185,7 +1187,12 @@ class CUP$Parser$actions {
 		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Integer e = (Integer)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG39
- tabla.insertarVector(t,i,0.0,false,'0',e,null); 
+ 
+																												simboloLista s = tabla.buscar(i);
+																												if (s != null){
+																													parser.report_error( "El vector " + i + " ya ha sido declarado.\n", null );
+																												} else tabla.insertarVector(t,i,0.0,false,'0',e,null); 
+																											
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDecl",10, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1207,7 +1214,12 @@ class CUP$Parser$actions {
 		Location e1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Integer e1 = (Integer)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG40
- tabla.insertarVector(t,i,0.0,false,'0',e,e1);  	
+ 
+																												simboloLista s = tabla.buscar(i);
+																												if (s != null){
+																													parser.report_error( "El vector " + i + " ya ha sido declarado.\n", null );
+																												} else tabla.insertarVector(t,i,0.0,false,'0',e,e1);
+																											
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDecl",10, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1906,10 +1918,7 @@ class CUP$Parser$actions {
 																			}
 																			else if ( t != "ENTERO" && t != "REAL") {
 																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t + ".\n", null );
-																			}else{
-																				tabla.insertar(t,i,e,false,'0');
-																				listIDFlujo.add(i);
-																			}
+																			}else tabla.insertar(t,i,e,false,'0');	
 																		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDeclFlujo",11, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1936,10 +1945,7 @@ class CUP$Parser$actions {
 																			}
 																			else if ( t != "BOOLEANO" ) {
 																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t + ".\n", null );
-																			}else{
-																				tabla.insertar(t,i,0.0,e,'0');  	
-																				listIDFlujo.add(i);
-																			}
+																			}else tabla.insertar(t,i,0.0,e,'0');  	
 																		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDeclFlujo",11, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1966,10 +1972,7 @@ class CUP$Parser$actions {
 																			}
 																			else if ( t != "CARACTER" ) {
 																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + t + ".\n", null );
-																			}else{
-																				tabla.insertar(t,i,0.0,false,e);
-																				listIDFlujo.add(i);
-																			}
+																			}else tabla.insertar(t,i,0.0,false,e);  
 																		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDeclFlujo",11, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1986,7 +1989,12 @@ class CUP$Parser$actions {
 		Location ixright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
 		String i = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
 		//@@CUPDBG78
- tabla.insertar(t,i,null,null,null).isChanged = true;     
+ 
+																			simboloLista s = tabla.buscar(i);
+																			if (s != null){
+																				parser.report_error( "La variable " + i + " ya ha sido declarada.\n", null );
+																			}else tabla.insertar(t,i,0.0,false,'0').isChanged = true;   
+																		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDeclFlujo",11, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -2005,17 +2013,17 @@ class CUP$Parser$actions {
 		Location dxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		String d = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG79
- 	
+ 
 																			simboloLista s = tabla.buscar(i);
 																			if (s != null){
 																				parser.report_error( "La variable " + i + " ya ha sido declarada.\n", null );
-																			}else{
+																			} else{
 																				listID.add(i);
 																				for(int j = 0; j < listID.size(); j++){
 																				 	tabla.insertar(t,listID.get(j).toString(),0.0,false,'0');
 																				}
-																				listID.clear();	
-																			}
+																				listID.clear();
+																			}	  
 																  		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDeclFlujo",11, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -2040,7 +2048,7 @@ class CUP$Parser$actions {
 																			else if ( s.tipo != "ENTERO" && s.tipo != "REAL") {
 																				parser.report_error( "No se puede asignar el valor " + e + " a la variable " + i + " porque esta es de tipo " + s.tipo + ".\n", null );
 																			}else{
-																				tabla.insertar(s.tipo,i,e,false,'0');
+																				tabla.insertar(s.tipo,i,e, false,'0');
 																				listIDFlujo.add(i);
 																			}
 																		
@@ -2135,7 +2143,12 @@ class CUP$Parser$actions {
 		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Integer e = (Integer)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG84
- tabla.insertarVector(t,i,null,null,null,e,null);	listIDFlujo.add(i); 
+ 
+																												simboloLista s = tabla.buscar(i);
+																												if (s != null){
+																													parser.report_error( "El vector " + i + " ya ha sido declarado.\n", null );
+																												} else tabla.insertarVector(t,i,0.0,false,'0',e,null); 
+																											
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDeclFlujo",11, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -2157,7 +2170,12 @@ class CUP$Parser$actions {
 		Location e1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Integer e1 = (Integer)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG85
- tabla.insertarVector(t,i,null,null,null,e,e1); listIDFlujo.add(i); 	
+ 
+																												simboloLista s = tabla.buscar(i);
+																												if (s != null){
+																													parser.report_error( "El vector " + i + " ya ha sido declarado.\n", null );
+																												} else tabla.insertarVector(t,i,0.0,false,'0',e,e1);
+																											
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("varDeclFlujo",11, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
