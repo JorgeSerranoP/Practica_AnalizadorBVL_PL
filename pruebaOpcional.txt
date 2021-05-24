@@ -1,0 +1,31 @@
+// COORDENADAS FUERA DE LÍMITES
+e1[4];
+e5[1][5];
+e5[5][1];
+e1[4] := 1;
+e5[1][5] := 1;
+e5[5][1] := 1;
+
+// DIMENSIONES INCORRECTAS
+e2[1][2];
+e5[0];
+e2[1][2] := 1;
+e5[0] := 1;
+
+// RECUPERACIÓN DE ERRORES
+SI 1<true ENTONCES 1; FINSI
+1+;
+
+booleano c3 := true;
+caracter c4 := 'a';
+
+// ERRORES EN OPERACIONES ARITMETICAS
+1 + c3;
+1 * c4;
+1 - c3;
+1 / c4;
+
+// ERRORES EN COMPARACIONES
+1 < c3;
+1 > c3;
+1 == c3;

@@ -1,0 +1,61 @@
+// DECLARACIONES Y ASIGNACIONES
+
+ENTERO decl1;
+BooLEANO decl2;
+ReAL decl3;
+caracter decl4;
+
+ENTERO declAsig1 := 1;
+BooLEANO declAsig2 := truE;
+ReAL declAsig3 := .1;
+caracter declAsig4 := 'a';
+
+ENTERO declMult1, declMult2, declMult3, declMult4, declMult5;
+BooLEANO declMult6, declMult7;
+ReAL declMult8, declMult9, declMult10, declMult11;
+caracter declMult12, declMult13, declMult14;
+
+decl1 := 5 * +3 - 80/10;
+decl3 := 0X78F / 4E9 * 015;
+decl2 := (decl1 > decl3) and (not false);
+decl4 := '4';
+
+declMult1 := ENTRADA;  
+declMult6 := ENTRADA;
+declMult8 := ENTRADA;  
+declMult12 := ENTRADA;
+
+// CONDICIONALES
+
+SI declAsig1>declAsig3 AND decl1>1 ENTONCES 
+declMult2 := 3;
+ SINO 
+ 	SI true AND ((1==1 and not true) or false) ENTONCES
+		declMult7 := true;
+ 	SINO 
+ 		declMult12 := 'i';
+	FINSI
+FINSI
+
+//DECLARACIÓN Y ASIGNACIÓN DE VECTORES
+
+VECTOR REAL matrizReal [2][2];
+VECTOR CARACTER matrizChar [4];
+VECTOR ENTERO matrizEntero [5];
+VECTOR BOOLEANO matrizBool [7][3];
+
+matrizReal [1][1] := 7.7 + .3;
+matrizChar [2] := 'c';
+matrizEntero [0] := 2;
+matrizBool [5][1] := true;
+
+// BUCLES
+
+MIENTRAS 7 > matrizEntero[0]  AND matrizReal[1][1] > 0 
+	SI matrizEntero[0] < matrizReal[1][1] OR 1==1 ENTONCES
+	 matrizBool [2][1]:= false;
+	SINO 
+	 matrizBool [2][1]:= true;
+	FINSI 
+	matrizChar [3] := 'r';
+FINMIENTRAS 

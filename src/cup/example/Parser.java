@@ -508,7 +508,7 @@ public class Parser extends java_cup.runtime.lr_parser {
 
   ComplexSymbolFactory f = new ComplexSymbolFactory();
   symbolFactory = f;
-  File file = new File("input.txt");
+  File file = new File("pruebaCorrectas.txt");
   FileInputStream fis = null;
   try {
     fis = new FileInputStream(file);
@@ -533,7 +533,9 @@ public class Parser extends java_cup.runtime.lr_parser {
   public tablaSimbolos tabla = new tablaSimbolos();
   ArrayList listID = new ArrayList();
   ArrayList listIDFlujo = new ArrayList();
-
+  public void syntax_error(Symbol s) {
+    report_error("Se ha producido un error de sintaxis. Por favor revise el input introducido.\n", null);
+  }
 
 
 /** Cup generated class to encapsulate user supplied action code.*/

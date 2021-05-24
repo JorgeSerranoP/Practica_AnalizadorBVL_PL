@@ -7,7 +7,7 @@ class Driver {
 	public static void main(String[] args) throws Exception {
 		Parser parser = new Parser();
 		parser.parse();
-		parser.tabla.imprimir();
+		//parser.tabla.imprimir();
 		parser.tabla.rellenarFicheroSalida();
 	}
 	
