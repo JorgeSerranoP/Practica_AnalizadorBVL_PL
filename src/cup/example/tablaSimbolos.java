@@ -49,57 +49,11 @@ public class tablaSimbolos{
 							 pw.println(s.tipo + " " + s.id);	
 						 //Vectores dos dimensiones
 						 if(s.dimension1 != null && s.dimension2 != null) {
-							 if(s.tipo.equalsIgnoreCase("Entero")) {
-								 for (int i = 0; i < s.dimension1; i++){
-									 for (int j = 0; j < s.dimension2; j++){
-										 pw.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "]" + "[" + j + "]");
-									 }
-								 }
-							 }
-							 if(s.tipo.equalsIgnoreCase("Real")) { 
-								 for (int i = 0; i < s.dimension1; i++){
-									 for (int j = 0; j < s.dimension2; j++){
-										 pw.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "]" + "[" + j + "]");
-									 }
-								 }
-							 }
-							 if(s.tipo.equalsIgnoreCase("Booleano")) { 
-								 for (int i = 0; i < s.dimension1; i++){
-									 for (int j = 0; j < s.dimension2; j++){
-										 pw.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "]" + "[" + j + "]");
-									 }
-								 }
-							 }
-							 if(s.tipo.equalsIgnoreCase("Caracter")) { 
-								 for (int i = 0; i < s.dimension1; i++){
-									 for (int j = 0; j < s.dimension2; j++){
-										 pw.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "]" + "[" + j + "]");
-									 }
-								 }
-							 }
+							pw.println("VECTOR " + s.tipo + " " + s.id +  " [" + s.dimension1 + "]" + "[" + s.dimension2 + "]");
 						 }
 						//Vectores una dimension
 						 if(s.dimension1 != null && s.dimension2 == null) {
-							 if(s.tipo.equalsIgnoreCase("Entero")) {
-								 for (int i = 0; i < s.dimension1; i++){
-									 pw.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "]");
-								 }
-							 }
-							 if(s.tipo.equalsIgnoreCase("Real")) { 
-								 for (int i = 0; i < s.dimension1; i++){
-									 pw.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "]");
-								 }
-							 }
-							 if(s.tipo.equalsIgnoreCase("Booleano")) { 
-								 for (int i = 0; i < s.dimension1; i++){
-									 pw.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "]");
-								 }
-						 	 }
-							 if(s.tipo.equalsIgnoreCase("Caracter")) { 
-								 for (int i = 0; i < s.dimension1; i++){
-									 pw.println("VECTOR " + s.tipo + " " + s.id +  " [" + i + "]");
-								 }
-							 }
+							 pw.println("VECTOR " + s.tipo + " " + s.id +  " [" + s.dimension1 + "]");
 						 }
 					 }
 		            

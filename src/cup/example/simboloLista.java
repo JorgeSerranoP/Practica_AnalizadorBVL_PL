@@ -28,8 +28,17 @@ public class simboloLista {
 		this.tipo = tipo;
 		this.id = id;
 		this.valorDVector = new Double[dimension1];
+		for(int i = 0; i < dimension1; i++) {
+			this.valorDVector[i] = 0.0;
+		}
 		this.valorBVector = new Boolean[dimension1];
+		for(int i = 0; i < dimension1; i++) {
+			this.valorBVector[i] = false;
+		}
 		this.valorCVector = new Character[dimension1];
+		for(int i = 0; i < dimension1; i++) {
+			this.valorCVector[i] = '0';
+		}
 		this.valorD = valorD;
 		this.valorB = valorB;
 		this.valorC = valorC;
@@ -37,8 +46,23 @@ public class simboloLista {
 		this.dimension2 = dimension2;
 		if (dimension2 != null) {
 			this.valorDVector2 = new Double[dimension1][dimension2];
+			for(int i = 0; i < dimension1; i++) {
+				for(int j = 0; j < dimension2; j++) {
+					this.valorDVector2[i][j] = 0.0;
+				}
+			}
 			this.valorBVector2 = new Boolean[dimension1][dimension2];
+			for(int i = 0; i < dimension1; i++) {
+				for(int j = 0; j < dimension2; j++) {
+					this.valorBVector2[i][j] = false;
+				}
+			}
 			this.valorCVector2 = new Character[dimension1][dimension2];
+			for(int i = 0; i < dimension1; i++) {
+				for(int j = 0; j < dimension2; j++) {
+					this.valorCVector2[i][j] = '0';
+				}
+			}
 		}
 	}
 	
