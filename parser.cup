@@ -391,6 +391,7 @@ exprBool        ::= exprNum:e LESSTHAN exprNum:e1          				{:
 																				else RESULT = true;	
 																			}	
 																		:}
+			 	| LPAREN exprBool:e RPAREN          					{: RESULT = e;              							:}
 				;
 				
 exprChar        ::= CHAR:c												{: RESULT = c;                      :}
