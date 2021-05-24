@@ -903,7 +903,10 @@ class CUP$Parser$actions {
 		//@@CUPDBG27
  
 																			simboloLista s = tabla.buscar(i);
-																			if ( s == null ) {
+																			if ( s.tipo != "ENTERO" && s.tipo != "REAL" ) {
+																				parser.report_error( "La variable " + i + " no es de tipo numérico.\n", null );
+																			}
+																			else if ( s == null ) {
 																				parser.report_error( "No hay un valor asignado a la variable " + i + ".\n", null );
 																			}else  RESULT = s.valorD;
 																		
@@ -925,10 +928,19 @@ class CUP$Parser$actions {
  
 																			simboloLista s = tabla.buscar(i);
 																			if ( s == null ) {
-																				parser.report_error( "No existe el vecrtor " + i + ".\n", null );
-																			} else if(s.valorDVector[e] == null){ parser.report_error( "No hay un valor asignado al vector " + i + " en la posición " + e + ".\n", null );
-																			}
-																			else RESULT = s.valorDVector[e];
+																				parser.report_error( "No existe el vector " + i + ".\n", null );
+																			}else{
+																				if(s.dimension2 != null){
+																					parser.report_error( "El vector " + i + " no tiene doble dimensión.\n", null );
+																				}
+																				else if(s.tipo != "ENTERO" && s.tipo != "REAL"){
+																					parser.report_error( "El vector " + i + " no es de tipo numérico.\n", null );
+																				}else if(e >= s.dimension1){
+																					parser.report_error( "El vector " + i + "[" + e + "] está fuera de límites.\n", null );
+																				}else{
+																					RESULT = s.valorDVector[e];
+																					}
+																				}
 																		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("exprNum",5, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -951,11 +963,18 @@ class CUP$Parser$actions {
  
 																			simboloLista s = tabla.buscar(i);
 																			if ( s == null ) {
-																				parser.report_error( "No existe el vecrtor " + i + ".\n", null );
+																				parser.report_error( "No existe el vector " + i + ".\n", null );
+																			}else{
+																				if(s.dimension2 == null){
+																					parser.report_error( "El vector " + i + " tiene doble dimension no coinciden.\n", null );
+																				} else if(s.tipo != "ENTERO" && s.tipo != "REAL"){
+																					parser.report_error( "El vector " + i + " no es de tipo numérico.\n", null );
+																				}else if(e >= s.dimension1 || e1>= s.dimension2){
+																					parser.report_error( "El vector " + i + "[" + e + "][" + e1 + "] está fuera de límites.\n", null );
+																				}else{
+																					RESULT = s.valorDVector2[e][e1];
+																				}
 																			}
-																			else if(s.valorDVector2[e][e1] == null){ parser.report_error( "No hay un valor asignado al vector " + i + " en la posición [" + e + "][" + e1 + "]" + ".\n", null );
-																			}
-																			else RESULT = s.valorDVector2[e][e1];
 																		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("exprNum",5, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
